@@ -1,0 +1,69 @@
+<UserControl x:Class="GabrielOS.Presentation.Views.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="clr-namespace:GabrielOS.Presentation.Converters">
+
+    <UserControl.Resources>
+        <conv:NullableScoreConverter x:Key="NullableScoreConverter"/>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+            <TextBlock Text="Dashboard" Style="{StaticResource H1}" Margin="0,0,0,20"/>
+
+            <!-- Today's Mode -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Today's Mode" Style="{StaticResource H3}" Margin="0,0,0,8"/>
+                    <TextBlock Text="{Binding SuggestedModeText}" Style="{StaticResource BodyText}"
+                               TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Journal This Week -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Journal entries this week: " Style="{StaticResource BodyText}"/>
+                    <TextBlock Text="{Binding WeeklyJournalCount}" Style="{StaticResource BodyText}"
+                               Foreground="{StaticResource PrimaryBrush}" FontWeight="SemiBold"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Pillar Scores -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Pillars" Style="{StaticResource H3}" Margin="0,0,0,12"/>
+                    <ItemsControl ItemsSource="{Binding Pillars}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="50"/>
+                                        <ColumnDefinition Width="80"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0" Text="{Binding Name}"
+                                               Style="{StaticResource BodyText}"
+                                               VerticalAlignment="Center"/>
+
+                                    <TextBlock Grid.Column="1"
+                                               Text="{Binding Score, Converter={StaticResource NullableScoreConverter}}"
+                                               Style="{StaticResource BodyText}"
+                                               VerticalAlignment="Center"
+                                               HorizontalAlignment="Center"/>
+
+                                    <TextBlock Grid.Column="2"
+                                               Text="{Binding Trend}"
+                                               Style="{StaticResource SecondaryText}"
+                                               VerticalAlignment="Center"
+                                               HorizontalAlignment="Center"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
