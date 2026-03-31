@@ -1,0 +1,90 @@
+<Window x:Class="GabrielOS.Presentation.SplashWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowStyle="None" ResizeMode="NoResize"
+        Width="420" Height="260"
+        WindowStartupLocation="CenterScreen"
+        Background="#16161E"
+        AllowsTransparency="False">
+
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="Window.Loaded">
+            <BeginStoryboard>
+                <Storyboard>
+                    <!-- Fade in -->
+                    <DoubleAnimation Storyboard.TargetName="ContentPanel"
+                                     Storyboard.TargetProperty="Opacity"
+                                     From="0" To="1" Duration="0:0:0.55">
+                        <DoubleAnimation.EasingFunction>
+                            <CubicEase EasingMode="EaseOut"/>
+                        </DoubleAnimation.EasingFunction>
+                    </DoubleAnimation>
+                    <!-- Slide up -->
+                    <DoubleAnimation Storyboard.TargetName="ContentPanel"
+                                     Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                     From="18" To="0" Duration="0:0:0.55">
+                        <DoubleAnimation.EasingFunction>
+                            <CubicEase EasingMode="EaseOut"/>
+                        </DoubleAnimation.EasingFunction>
+                    </DoubleAnimation>
+                    <!-- Subtitle stagger -->
+                    <DoubleAnimation Storyboard.TargetName="SubtitleText"
+                                     Storyboard.TargetProperty="Opacity"
+                                     From="0" To="1" Duration="0:0:0.4" BeginTime="0:0:0.3">
+                        <DoubleAnimation.EasingFunction>
+                            <CubicEase EasingMode="EaseOut"/>
+                        </DoubleAnimation.EasingFunction>
+                    </DoubleAnimation>
+                    <!-- Bottom line stagger -->
+                    <DoubleAnimation Storyboard.TargetName="BottomLine"
+                                     Storyboard.TargetProperty="Opacity"
+                                     From="0" To="1" Duration="0:0:0.4" BeginTime="0:0:0.5">
+                        <DoubleAnimation.EasingFunction>
+                            <CubicEase EasingMode="EaseOut"/>
+                        </DoubleAnimation.EasingFunction>
+                    </DoubleAnimation>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </Window.Triggers>
+
+    <Grid>
+        <!-- Border accent line at top -->
+        <Border Height="3" VerticalAlignment="Top" HorizontalAlignment="Stretch"
+                Background="#7C9EBD"/>
+
+        <!-- Main content -->
+        <StackPanel x:Name="ContentPanel" Opacity="0"
+                    VerticalAlignment="Center" HorizontalAlignment="Center">
+            <StackPanel.RenderTransform>
+                <TranslateTransform/>
+            </StackPanel.RenderTransform>
+
+            <!-- Logo -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBlock Text="GABRIEL"
+                           FontFamily="Segoe UI" FontSize="44" FontWeight="Light"
+                           Foreground="#D8DEE9"/>
+                <TextBlock Text="OS"
+                           FontFamily="Segoe UI" FontSize="44" FontWeight="SemiBold"
+                           Foreground="#7C9EBD" Margin="6,0,0,0"/>
+            </StackPanel>
+
+            <!-- Subtitle -->
+            <TextBlock x:Name="SubtitleText" Opacity="0"
+                       Text="Life Operating System"
+                       FontFamily="Segoe UI" FontSize="13" FontWeight="Normal"
+                       Foreground="#808A9F" HorizontalAlignment="Center"
+                       Margin="0,10,0,0"/>
+        </StackPanel>
+
+        <!-- Bottom hint -->
+        <StackPanel x:Name="BottomLine" Opacity="0"
+                    VerticalAlignment="Bottom" Margin="0,0,0,24">
+            <Border Height="1" Background="#3B3B50" Margin="40,0,40,16"/>
+            <TextBlock Text="loading…"
+                       FontFamily="Segoe UI" FontSize="11"
+                       Foreground="#3B3B50" HorizontalAlignment="Center"/>
+        </StackPanel>
+    </Grid>
+</Window>
