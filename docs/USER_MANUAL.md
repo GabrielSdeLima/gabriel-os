@@ -1,546 +1,484 @@
 # GabrielOS — User Manual
 
-GabrielOS is your personal life operating system: a desktop app that helps you track the 7 pillars of your life, set meaningful goals, reflect weekly and monthly, and make deliberate decisions about where your energy goes.
-
-Everything is stored locally on your machine. No cloud. No subscriptions required to use the core features.
-
----
-
 ## Table of Contents
 
-1. [Philosophy](#1-philosophy)
-2. [Getting Started](#2-getting-started)
-3. [Navigation](#3-navigation)
-4. [CORE — Daily Use](#4-core--daily-use)
-   - [Dashboard](#41-dashboard)
-   - [Daily Check-in](#42-daily-check-in)
-   - [Journal](#43-journal)
-5. [PLANNING — Direction](#5-planning--direction)
-   - [Pillars](#51-pillars)
-   - [Goals](#52-goals)
-   - [Tasks](#53-tasks)
-   - [Cycle Focus](#54-cycle-focus)
-6. [REFLECTION — Sense-Making](#6-reflection--sense-making)
-   - [Weekly Review](#61-weekly-review)
-   - [Monthly Review](#62-monthly-review)
-   - [Decisions](#63-decisions)
-   - [Patterns](#64-patterns)
-7. [ANALYTICS — Visibility](#7-analytics--visibility)
-   - [Metrics](#71-metrics)
-   - [Pillar Trends](#72-pillar-trends)
-8. [SYSTEM — Configuration](#8-system--configuration)
-   - [Export](#81-export)
-   - [Settings](#82-settings)
-9. [AI Features](#9-ai-features)
-10. [Business Rules Reference](#10-business-rules-reference)
-11. [Data & Privacy](#11-data--privacy)
-12. [Keyboard Shortcuts](#12-keyboard-shortcuts)
+1. [Overview & Philosophy](#overview--philosophy)
+2. [Getting Started](#getting-started)
+3. [Navigation](#navigation)
+4. [CORE Screens](#core-screens)
+   - [Dashboard](#dashboard)
+   - [Daily Check-in](#daily-check-in)
+   - [Journal](#journal)
+5. [PLANNING Screens](#planning-screens)
+   - [Pillars](#pillars)
+   - [Goals](#goals)
+   - [Tasks](#tasks)
+   - [Cycle Focus](#cycle-focus)
+6. [REFLECTION Screens](#reflection-screens)
+   - [Weekly Review](#weekly-review)
+   - [Monthly Review](#monthly-review)
+   - [Decisions](#decisions)
+   - [Patterns](#patterns)
+7. [ANALYTICS Screens](#analytics-screens)
+   - [Metrics](#metrics)
+   - [Pillar Trends](#pillar-trends)
+8. [SYSTEM Screens](#system-screens)
+   - [Export](#export)
+   - [Settings](#settings)
+9. [AI Features](#ai-features)
+10. [Business Rules Reference](#business-rules-reference)
+11. [Data & Privacy](#data--privacy)
+12. [Keyboard Shortcuts](#keyboard-shortcuts)
+13. [Default Pillars](#default-pillars)
 
 ---
 
-## 1. Philosophy
+## Overview & Philosophy
 
-GabrielOS is built on seven ideas:
+GabrielOS is a personal operating system for intentional living. It is built around **7 pillars of life** — the core areas that together define a well-rounded, purposeful existence. The app gives you a structured way to check in with yourself daily, plan with clarity, reflect honestly, and spot patterns over time.
 
-- **Structure liberates.** Every input justifies its existence. No busywork.
-- **Fewer fronts, more depth.** The system actively pushes back when you spread too thin (max 3 active P1 goals).
-- **Clarity before volume.** A few high-quality entries beat many meaningless ones.
-- **Reflection becomes direction.** Every analysis should convert to a decision, experiment, or next action.
-- **Works on bad days.** Useful regardless of your current state. The check-in *adapts* to where you are.
-- **Authorship, not control.** Conscious direction, not obsessive tracking.
-- **Subjectivity matters.** Energy, clarity, mood, tension — these are first-class data, not noise.
+The daily loop is simple:
 
-The core loop is simple:
+1. **Check in** — Score your energy, mood, clarity, and tension. The system suggests an operating mode for the day.
+2. **Act** — Work on your goals, track tasks, journal your thoughts.
+3. **Reflect** — Weekly and monthly reviews help you see what's working and what needs attention.
+4. **Adjust** — Update pillar scores, shift priorities, start a new cycle focus.
 
-```
-Check in daily → Reflect weekly → Review monthly → Adjust goals and focus
-```
+Everything lives locally on your machine. There is no cloud, no account, no external dependency beyond an optional AI integration for summaries.
 
 ---
 
-## 2. Getting Started
+## Getting Started
 
-### First Launch
+On first launch, GabrielOS creates a default user profile and seeds **7 foundation pillars** (Body & Health, Mind & Stability, Career & Work, Finances, Relationships, Learning & Expansion, Freedom & Lifestyle). These pillars are yours to customize — rename them, update their descriptions, or adjust their priorities as you see fit.
 
-On first launch, GabrielOS creates a local database at:
+**Suggested first steps:**
 
+1. Open **Check-in** and do your first daily check-in. Move the 4 sliders to match how you feel right now.
+2. Go to **Pillars** and review the 7 defaults. Edit descriptions and visions to match your life.
+3. Create your first **Goal** — pick a pillar, set a horizon (Quarterly or Monthly works well to start), and write a clear next action.
+4. Start a **Cycle Focus** — pick a 30-day theme and link up to 3 goals to it.
+5. At the end of the week, do your first **Weekly Review**.
+
+---
+
+## Navigation
+
+The sidebar is organized into 5 groups:
+
+| Group | Screens | Purpose |
+|-------|---------|---------|
+| **CORE** | Dashboard, Check-in, Journal | Quick daily access |
+| **PLANNING** | Pillars, Goals, Tasks, Cycle Focus | Goal-oriented work |
+| **REFLECTION** | Weekly Review, Monthly Review, Decisions, Patterns | Intentional retrospective |
+| **ANALYTICS** | Metrics, Pillar Trends | Insights and trends |
+| **SYSTEM** | Export, Settings | Configuration and data |
+
+A **search bar** sits at the top of the sidebar (Ctrl+K). The **back button** in the header lets you return to previously visited screens (up to 8 steps of history).
+
+If you have unsaved changes on the current screen, GabrielOS will warn you before navigating away.
+
+### Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| Ctrl+D | Go to Dashboard |
+| Ctrl+J | Go to Journal |
+| Ctrl+G | Go to Goals |
+| Ctrl+K | Open Search |
+| Ctrl+, | Open Settings |
+| Alt+Left | Go Back |
+| Ctrl+S | Save (on any screen with a save action) |
+
+---
+
+## CORE Screens
+
+### Dashboard
+
+The Dashboard is your command center. It shows a unified snapshot of your current state across several sections:
+
+- **Pillar Scores & Trends** — Each of your pillars with its current score and trend arrow (improving, stable, declining, or unknown).
+- **P1 Active Goals** — Your top-priority goals that are currently active (up to 3 shown).
+- **Today's Check-in** — Your most recent check-in metrics and the suggested operating mode.
+- **Active Cycle Focus** — The title and date range of your current cycle.
+- **Weekly Journal Count** — How many journal entries you've written this week.
+- **Alerts** — The top 5 automated alerts that need your attention (see [Business Rules](#business-rules-reference) for all alert types).
+
+The Dashboard is read-only — it pulls data from all other screens. To change anything, navigate to the relevant screen.
+
+### Daily Check-in
+
+The Check-in screen captures how you're doing right now. It has **4 slider metrics**, each on a 1–10 scale:
+
+| Metric | What it measures |
+|--------|-----------------|
+| **Energy** | Physical and mental fuel — how much capacity you have today |
+| **Mood** | Emotional state — how positive or negative you feel |
+| **Clarity** | Mental sharpness — how well you can think and decide |
+| **Tension** | Stress/pressure — how tightly wound you feel (higher = worse) |
+
+As you move the sliders, the screen shows a **Suggested Mode** in real time:
+
+| Mode | When it triggers | What it means |
+|------|-----------------|---------------|
+| **PROTECT** | Energy ≤ 3 OR Tension ≥ 8 | You're running low or overwhelmed. Minimize demands, do only what's essential. |
+| **SIMPLIFY** | Clarity ≤ 4 AND Energy ≤ 5 | Your head is foggy. Pick one thing and focus on it. Cut everything else. |
+| **EXPAND** | Energy ≥ 7 AND Clarity ≥ 7 AND Tension ≤ 4 | You're firing on all cylinders. Plan, explore, or tackle something ambitious. |
+| **FOCUS** | Default (none of the above) | Stable state. Execute on your priorities, close open loops. |
+
+Below the sliders, you can add optional text:
+- **Physical State** — How your body feels (sore, rested, sick, etc.)
+- **Top Concern** — What's weighing on your mind
+- **Top Priority** — The one thing you want to accomplish today
+- **Free Text** — Anything else worth noting
+
+The **History** sidebar on the right shows your last 90 days of check-ins. Click any past check-in to view its details. Click "Back to Today" to return to the current day's form.
+
+You can do one check-in per day. If you've already saved one today, the form loads your existing data so you can update it.
+
+### Journal
+
+The Journal is your free-form space for capturing thoughts, insights, and reflections. Each entry has:
+
+- **Entry Type** — Choose from 8 types:
+  - **Reflection** — General thinking or processing
+  - **Insight** — An "aha" moment or realization
+  - **Trigger** — Something that caused a strong reaction
+  - **Pattern Note** — An observation about a recurring behavior
+  - **Learning** — Something new you learned
+  - **Idea** — A creative thought or possibility
+  - **Somatic Note** — A body-based observation (physical sensation, tension, etc.)
+  - **Dream** — A dream worth recording
+- **Title** and **Content** — What happened, what you noticed, what you think about it.
+- **Mood / Energy / Intensity** — Optional numeric scores to tag the entry.
+- **Tags** — Free-form tags for categorization.
+- **Sensitive** — Flag an entry as sensitive (for your own awareness).
+- **Links** — Optionally connect the entry to a Pillar, Goal, or Decision.
+
+The sidebar shows your recent entries. When no entries exist, an empty state message guides you to create your first one.
+
+---
+
+## PLANNING Screens
+
+### Pillars
+
+Pillars represent the foundational areas of your life. GabrielOS comes with 7 defaults (see [Default Pillars](#default-pillars)), but you can customize them fully.
+
+Each pillar has:
+
+- **Name** — A short label (e.g., "Body & Health")
+- **Description** — What this area means to you
+- **Vision** — Where you want this area to be in the future
+- **Current State** — An honest assessment of where things stand now
+- **Score** — A 1–10 rating you assign (updated during reviews)
+- **Priority** — Low, Medium, High, or Critical
+- **Trend** — Improving, Stable, Declining, or Unknown (shown as arrows on the Dashboard)
+- **Last Reviewed** — When you last updated this pillar's assessment
+
+The screen opens with the first pillar pre-selected. Click any pillar in the list to view and edit its details.
+
+### Goals
+
+Goals are the concrete outcomes you're working toward. Each goal is linked to a pillar and has several key fields:
+
+- **Title** and **Description** — What you're trying to achieve
+- **Why It Matters** — Your motivation (helpful during reviews)
+- **Pillar** — Which life area this goal belongs to
+- **Horizon** — The time scale:
+  - **Vision** — Long-term (years)
+  - **Annual** — This year
+  - **Quarterly** — This quarter
+  - **Monthly** — This month
+  - **Sprint** — Short burst (1–2 weeks)
+  - **Exploratory** — Open-ended investigation
+- **Priority** — P1 (highest) through P4 (lowest). **Important: You can have at most 3 active P1 goals.** The system alerts you if you exceed this.
+- **Status** — Idea, Incubating, Active, Paused, Blocked, Completed, Dropped
+- **Next Action** — The very next concrete step. Goals without a next action trigger an alert.
+- **Success Criteria** — How you'll know it's done
+- **Main Risk** — What could go wrong
+- **Dates** — Start, target, review, and completion dates
+
+The sidebar shows your goals list, filtered by the selected pillar.
+
+### Tasks
+
+Tasks are the actionable work items that move your goals forward. Each task has:
+
+- **Title** and **Description**
+- **Status** — Backlog, Next, Doing, Done, Cancelled
+- **Priority** — P1 through P4
+- **Due Date** — Optional deadline
+- **Is Next Action** — Flag this task as the immediate next step
+- **Links** — Connect to a Goal or Initiative
+
+The "Goal" dropdown shows your existing goals. If it appears empty, you need to create goals first.
+
+### Cycle Focus
+
+A Cycle Focus is a time-boxed period (typically 30 days) where you commit to a strategic theme. It answers the question: "What's the one thing I'm going to pour my energy into this month?"
+
+Each cycle has:
+
+- **Title** — A clear name for the focus period (required)
+- **Thesis** — A short statement of what you're betting on or testing (optional but recommended)
+- **Start / End Dates** — The time window for this cycle
+- **Linked Goals** — Up to 3 goals that serve this cycle's theme
+
+**Rules:**
+- Only **one cycle can be active** at a time. Starting a new cycle automatically deactivates the previous one.
+- Maximum **3 goals per cycle** — this forces prioritization.
+- Only goals with **Active** or **Incubating** status can be linked.
+
+Past cycles are visible below the active cycle for reference.
+
+---
+
+## REFLECTION Screens
+
+### Weekly Review
+
+The Weekly Review is your end-of-week checkpoint. It has 7 structured fields plus pillar scoring:
+
+| Field | Purpose |
+|-------|---------|
+| **Wins this week** | What went well — celebrate progress |
+| **Frictions / what didn't work** | What got in the way |
+| **What I avoided (and shouldn't have)** | Honest self-assessment of procrastination or avoidance |
+| **Energy drains** | Activities or people that drained your energy |
+| **Energy gains** | Activities or people that energized you |
+| **Main insight** | The single most important takeaway from this week |
+| **Next week focus** | What you want to prioritize next week |
+| **Notes** | Anything else worth noting |
+
+**Pillar Scores** — Rate each pillar from 1–10 for this week using sliders.
+
+**AI Summary** — If you've configured an API key, click "Generate" to get an AI-powered analysis of your week (see [AI Features](#ai-features)).
+
+The **Past Reviews** sidebar on the right shows your recent weekly reviews. Click any past review to load it and see what you wrote. The current week is shown by default.
+
+### Monthly Review
+
+The Monthly Review takes a wider view. It has 4 structured fields:
+
+| Field | Purpose |
+|-------|---------|
+| **Highlights** | The best moments and achievements of the month |
+| **Lowlights** | What was difficult or disappointing |
+| **Key Learnings** | What you learned about yourself, your work, or your life |
+| **Next Month Intentions** | What you want to carry forward or change |
+
+**Pillar Scores** — Rate each pillar for the month.
+
+Use the **month/year selectors** at the top to navigate between months. The **Past Reviews** sidebar shows your last 12 monthly reviews — click any to load it.
+
+**AI Summary** — Available if you've configured an API key. Analyzes your monthly data and generates a personalized insight summary.
+
+### Decisions
+
+The Decisions screen helps you document important choices so you can learn from them later. Each decision has:
+
+- **Title** — A short name for the decision
+- **Context / Problem** — What situation led to this decision
+- **Options** — The alternatives you considered
+- **Chosen Option** — What you decided
+- **Rationale** — Why you chose this option
+- **Trade-offs** — What you're giving up
+- **Risks Accepted** — Known risks you're taking on
+- **Status** — Active, Under Review, Superseded, or Archived
+- **Review Date** — When to revisit this decision (triggers an alert when overdue)
+- **Outcome Notes** — What actually happened (filled in later)
+- **Links** — Optionally connect to a Pillar or Goal
+
+### Patterns
+
+The Patterns screen tracks recurring behaviors you notice in yourself. Each pattern has:
+
+- **Name** — A clear label (e.g., "Overcommitting on Mondays")
+- **Description** — What the pattern looks like in practice
+- **Trigger** — What sets it off
+- **Status** — Three stages:
+  - **Emerging** — You've noticed it but aren't sure yet
+  - **Confirmed** — You've seen it enough times to know it's real
+  - **Resolved** — You've addressed it or it's no longer active
+
+---
+
+## ANALYTICS Screens
+
+### Metrics
+
+The Metrics screen lets you track quantitative data points for each pillar. Each metric entry has:
+
+- **Pillar** — Which life area this metric belongs to
+- **Name** — What you're measuring (e.g., "Hours of sleep", "Books read")
+- **Value** — The number
+- **Unit** — The unit of measurement (e.g., "hours", "kg", "count")
+- **Date** — When the measurement was taken
+- **Notes** — Additional context
+
+Use metrics to track objective data that supplements the subjective pillar scores from your reviews.
+
+### Pillar Trends
+
+The Pillar Trends screen shows a visual chart of your pillar scores over time using line graphs. You can select different time ranges to view:
+
+- **4 weeks** — Short-term trends
+- **8 weeks** — Medium-term view
+- **12 weeks** — Quarterly perspective
+- **24 weeks** — Half-year view
+
+This helps you see which pillars are improving, which are stable, and which need attention.
+
+---
+
+## SYSTEM Screens
+
+### Export
+
+The Export screen offers 3 ways to back up your data:
+
+| Format | Description | Filename |
+|--------|-------------|----------|
+| **Database Backup** | A full copy of the SQLite database file (.db). This is the most complete backup — it includes everything. | `gabrielos_backup_YYYYMMDD_HHmm.db` |
+| **JSON Export** | A structured JSON file with all your pillars, goals, decisions, check-ins, journal entries, reviews, patterns, metrics, and tasks. Good for portability or analysis. | `gabrielos_export_YYYYMMDD_HHmmss.json` |
+| **Journal Markdown** | A Markdown-formatted export of up to 1,000 recent journal entries. Good for reading or archiving your reflections. | `journal_YYYYMMDD_HHmmss.md` |
+
+Export files are saved to a location you choose via a file dialog.
+
+### Settings
+
+The Settings screen has two options:
+
+1. **API Key** — Enter your Anthropic API key to enable AI features. The key is stored locally. You can clear it at any time.
+2. **AI Model** — Choose which Claude model to use for AI summaries:
+   - **claude-haiku-4-5-20251001** — Fastest and cheapest. Good for quick summaries.
+   - **claude-sonnet-4-6** — Balanced speed and quality. Recommended for most users.
+   - **claude-opus-4-6** — Most capable. Best for deep, nuanced analysis.
+
+---
+
+## AI Features
+
+GabrielOS has optional AI integration powered by Anthropic's Claude. AI features are **off by default** — you need to configure an API key to enable them.
+
+### How to get an API key
+
+1. Go to [console.anthropic.com](https://console.anthropic.com) and create an account.
+2. Navigate to API Keys and create a new key.
+3. Copy the key and paste it into GabrielOS Settings.
+
+### Where AI appears
+
+AI summaries are available on two screens:
+
+- **Weekly Review** — Click "Generate" to get a 2–4 paragraph analysis of your week. The AI looks at your check-in data, pillar scores, journal entries, and review fields to identify patterns, highlight what's working, and suggest one concrete action.
+- **Monthly Review** — Click "Generate AI Summary" for a 3–5 paragraph monthly analysis. The AI considers your monthly data and offers insights about trends, progress, and areas that need attention.
+
+If no API key is configured, the Generate button is disabled and a message guides you to Settings.
+
+### Which model to choose
+
+- **Haiku** — Use this if you want fast, inexpensive summaries and don't need deep analysis.
+- **Sonnet** — The sweet spot. Good quality at reasonable cost. Start here.
+- **Opus** — Use this for the most thoughtful, detailed analysis. Costs more per request.
+
+The AI writes in flowing prose (no bullet points) and speaks to you directly and personally.
+
+---
+
+## Business Rules Reference
+
+### P1 Goal Cap
+
+You can have at most **3 active P1 goals** at any time. If you exceed this, the system generates a high-priority alert (A1). This rule exists to prevent overcommitment — if everything is P1, nothing is.
+
+### Mode Calculation
+
+Your suggested daily mode is calculated from your check-in metrics:
+
+| Condition | Suggested Mode |
+|-----------|---------------|
+| Energy ≤ 3 OR Tension ≥ 8 | **PROTECT** |
+| Clarity ≤ 4 AND Energy ≤ 5 | **SIMPLIFY** |
+| Energy ≥ 7 AND Clarity ≥ 7 AND Tension ≤ 4 | **EXPAND** |
+| None of the above | **FOCUS** |
+
+Conditions are evaluated in order — the first match wins.
+
+### Alert Types
+
+| Code | Alert | Condition | Severity |
+|------|-------|-----------|----------|
+| A1 | Too many P1 goals | More than 3 active P1 goals | High |
+| A2 | Goal without next action | An active goal has no next action defined | Medium |
+| A3 | Stale goal | An active goal hasn't been updated in 21+ days | Medium |
+| A4 | Neglected pillar | A pillar hasn't been reviewed in 30+ days | Medium |
+| A5 | Low energy streak | 3+ consecutive check-ins with energy ≤ 4 | High |
+| A6 | Missing weekly review | No weekly review, or last one was 9+ days ago | Low |
+
+### Cycle Focus Rules
+
+- One active cycle at a time. Activating a new one deactivates the previous.
+- Maximum 3 goals linked per cycle.
+- Only Active or Incubating goals can be linked.
+
+### Upsert Behavior
+
+Check-ins, weekly reviews, and monthly reviews use "upsert" logic — if one already exists for the same date/week/month, saving updates the existing record rather than creating a duplicate.
+
+---
+
+## Data & Privacy
+
+**All your data stays on your machine.** GabrielOS uses a local SQLite database — there is no server, no sync, no telemetry.
+
+The database file is stored at:
 ```
 %LOCALAPPDATA%\GabrielOS\gabrielos.db
 ```
 
-It also seeds your account with:
-- **User:** Gabriel (timezone: America/Sao_Paulo, phase: Rebuilding)
-- **7 default pillars** representing the major domains of life (see below)
+The only external network call GabrielOS makes is to the Anthropic API when you explicitly click "Generate" on a review screen — and only if you've configured an API key. The data sent is limited to the context needed for that specific summary (your check-ins, pillar scores, and review fields for the relevant time period).
 
-### The 7 Default Pillars
+### Backup Strategy
 
-| # | Pillar | Description |
-|---|--------|-------------|
-| 1 | Body & Health | Physical health, training, sleep, nutrition, body-mind integration |
-| 2 | Mind & Stability | Mental health, emotional regulation, therapy, meditation, inner peace |
-| 3 | Career & Work | Professional direction, positioning, skills, income, leadership |
-| 4 | Finances | Cash flow, savings, investments, financial independence |
-| 5 | Relationships | Family, friendships, romantic life, social connections |
-| 6 | Learning & Expansion | Courses, certifications, languages, intellectual growth |
-| 7 | Freedom & Lifestyle | Autonomy, living environment, daily structure, quality of life |
+Use the **Export** screen regularly to create backups:
 
-You can rename, reorder, or update any pillar to match your actual life.
+- **Database backup** for full restoration capability
+- **JSON export** for portable, readable data
+- **Journal Markdown** for an archive of your reflections
 
-### Suggested First Steps
-
-1. Go to **Pillars** and update the score (1–10) and trend for each pillar to reflect where you are today.
-2. Go to **Cycle Focus** and define your current 30–90 day direction.
-3. Go to **Goals** and add your 2–3 most important active goals (mark them P1).
-4. Do your first **Daily Check-in**.
-5. Come back weekly to complete a **Weekly Review**.
+Store backups in a safe location (cloud storage, external drive, etc.).
 
 ---
 
-## 3. Navigation
-
-The sidebar organizes all 16 screens into 5 groups:
-
-| Group | Screens |
-|-------|---------|
-| CORE | Dashboard, Check-in, Journal |
-| PLANNING | Pillars, Goals, Tasks, Cycle Focus |
-| REFLECTION | Weekly Review, Monthly Review, Decisions, Patterns |
-| ANALYTICS | Metrics, Pillar Trends |
-| SYSTEM | Export, Settings |
-
-Click any item in the sidebar to navigate. You can also use keyboard shortcuts — see [Section 12](#12-keyboard-shortcuts).
-
----
-
-## 4. CORE — Daily Use
-
-### 4.1 Dashboard
-
-The Dashboard is your daily home screen. It shows the most important information at a glance.
-
-**Left column:**
-- **Suggested Mode** — Based on your most recent check-in (Protect / Simplify / Focus / Expand). See [mode logic](#mode-calculation) for details.
-- **Active Cycle Focus** — Your current 30–90 day thesis and its linked goals.
-- **P1 Goals** — Up to 3 of your highest-priority active goals.
-- **Pillar Scores** — A quick summary of where each pillar currently stands.
-
-**Right column (Alerts):**
-- System-generated alerts that require your attention (up to 5, sorted by severity).
-- Alert types include: too many P1 fronts, stale goals, missing weekly review, decisions past review date, and more.
-- An empty alerts panel means the system sees no immediate issues.
-
-### 4.2 Daily Check-in
-
-The check-in is a 3-minute daily pulse. It captures 4 subjective signals on a 1–10 scale:
-
-| Signal | What it measures | Low = | High = |
-|--------|-----------------|-------|--------|
-| **Energy** | Physical/mental vitality | Depleted | Fully charged |
-| **Mood** | Emotional tone | Difficult | Positive |
-| **Clarity** | Mental focus | Foggy | Sharp |
-| **Tension** | Stress/pressure | Relaxed | Overloaded |
-
-Move the sliders to reflect how you actually feel right now — not how you want to feel.
-
-**Optional fields:**
-- **Physical state** — What's happening in your body (e.g., "sore from training", "good sleep")
-- **Concern** — What's on your mind or weighing on you
-- **Today's priority** — The one thing that matters most today
-- **Notes** — Anything else
-
-**Mode suggestion** updates live as you move the sliders. After saving, you'll see a short description of what the suggested mode means for today.
-
-Only one check-in per day is stored. Saving again on the same day updates the existing entry.
-
-### Mode Calculation
-
-| Condition | Suggested Mode | Meaning |
-|-----------|---------------|---------|
-| Energy ≤ 3 OR Tension ≥ 8 | **PROTECT** | Recover. Reduce load, protect capacity. |
-| Clarity ≤ 4 AND Energy ≤ 5 | **SIMPLIFY** | Do less. Remove friction, lower cognitive load. |
-| Energy ≥ 7 AND Clarity ≥ 7 AND Tension ≤ 4 | **EXPAND** | High capacity. Good time for new challenges. |
-| Otherwise | **FOCUS** | Default operating mode. Execute on current priorities. |
-
-### 4.3 Journal
-
-The journal is a flexible space for anything that doesn't fit elsewhere. Each entry has an **entry type** that gives it meaning:
-
-| Type | Use it for |
-|------|-----------|
-| **Reflection** | General thinking and self-observation |
-| **Insight** | A realization or discovery worth keeping |
-| **Trigger** | Something that provoked a strong emotional reaction |
-| **Pattern Note** | A behavior or tendency you noticed repeating |
-| **Learning** | Something you learned (from a book, experience, conversation) |
-| **Idea** | A concept, project idea, or creative thought |
-| **Somatic Note** | Body sensations, physical states, nervous system observations |
-| **Dream** | A dream you want to remember or explore |
-
-**Title** is optional but helps with search later.
-
-**Sensitive flag** — Mark an entry as sensitive to add a confirmation gate before it's displayed. Useful for deeply personal content.
-
-Journal entries appear in reverse chronological order. Use **Search** (Ctrl+K) to find entries by keyword.
-
----
-
-## 5. PLANNING — Direction
-
-### 5.1 Pillars
-
-Pillars are the 7 (or more) domains that make up your life. They are the backbone of the system — everything else connects back to them.
-
-**Fields:**
-
-| Field | Description |
-|-------|-------------|
-| **Name** | The pillar's label (e.g., "Body & Health") |
-| **Score** | Current state, 1–10. Update periodically. |
-| **Priority** | Low / Medium / High / Critical — how much attention this pillar needs now |
-| **Trend** | Unknown / Declining / Stable / Improving — direction of travel |
-| **Vision** | What this pillar looks like when it's thriving |
-| **Current State** | Where it actually is right now |
-
-You can reorder pillars by using the up/down controls. The order affects how they appear throughout the app.
-
-**Tip:** Update pillar scores after each weekly review. The Pillar Trends chart uses these historical snapshots.
-
-### 5.2 Goals
-
-Goals are your commitments to change something. They live within a **horizon** — a timeframe that defines their nature.
-
-**Horizons:**
-
-| Horizon | Timeframe | Use for |
-|---------|-----------|---------|
-| **Vision** | Lifelong | Big picture direction, identity-level aspirations |
-| **Annual** | 1 year | What you intend to accomplish this year |
-| **Quarterly** | 3 months | Focused outcomes for the current quarter |
-| **Monthly** | 1 month | Specific this-month commitments |
-| **Sprint** | 1–2 weeks | Short execution cycles |
-| **Exploratory** | Open | Experiments, things you're trying out |
-
-**Statuses:**
-
-| Status | Meaning |
-|--------|---------|
-| Idea | Not started, just captured |
-| Incubating | Thinking about it but not committed |
-| Active | Currently working on it |
-| Paused | Temporarily suspended |
-| Blocked | Waiting on something external |
-| Completed | Done |
-| Dropped | Intentionally abandoned |
-
-**Priority:**
-
-| Priority | Meaning |
-|----------|---------|
-| **P1** | Highest priority — you will push almost anything aside for this |
-| **P2** | Important, but yields to P1 |
-| **P3** | Worth doing when P1/P2 allow |
-| **P4** | Low priority / someday |
-
-**P1 Cap rule:** You can have at most **3 active P1 goals** at any time. If you try to set a 4th, the system will block it and ask you to demote or pause one first. This is intentional — it forces real prioritization.
-
-**Important fields:**
-- **Next Action** — The concrete next physical step. Keep this current.
-- **Review Date** — When you plan to reassess this goal. The alert system watches this.
-
-### 5.3 Tasks
-
-Tasks are concrete next actions — the smallest unit of work. They're different from Goals: a goal is an outcome you want; a task is something you do.
-
-**Statuses:**
-
-| Status | Meaning |
-|--------|---------|
-| **Backlog** | Captured but not scheduled |
-| **Next** | Up next — your immediate queue |
-| **Doing** | Currently in progress |
-| **Done** | Completed |
-| **Cancelled** | No longer relevant |
-
-**Linking to Goals** — You can associate a task with an active goal to maintain traceability.
-
-**Next Action flag** — Mark a task as the next action for its linked goal.
-
-Use the **Done** toggle to quickly complete tasks without navigating to an edit form.
-
-### 5.4 Cycle Focus
-
-A Cycle Focus is your operating thesis for the next 30–90 days. It answers: *"Given where I am right now, what's my primary direction?"*
-
-**Rules:**
-- Only **one active cycle focus** at a time. Creating a new active cycle automatically deactivates the previous one.
-- Link 2–3 goals to your cycle to make the connection between direction and execution explicit.
-
-**Fields:**
-- **Title** — Short label for this cycle
-- **Thesis** — One paragraph explaining your direction and why it matters now
-- **Start / End dates** — The cycle window (typically 30–90 days)
-- **Linked Goals** — 2–3 active goals that this cycle serves
-
-Your active cycle is shown on the Dashboard. If no cycle is active, that's a signal to define your current direction.
-
----
-
-## 6. REFLECTION — Sense-Making
-
-### 6.1 Weekly Review
-
-The Weekly Review is the most important recurring practice in GabrielOS. It closes the loop on the past week and sets direction for the next.
-
-**When:** Every week, ideally Sunday evening or Monday morning.
-
-**The 7 review fields:**
-
-| Field | Prompt |
-|-------|--------|
-| **Wins** | What went well this week? What are you proud of? |
-| **Frictions** | What created resistance or slowed you down? |
-| **Avoided Things** | What did you procrastinate or avoid? |
-| **Energy Drains** | What depleted your energy this week? |
-| **Energy Gains** | What gave you energy or felt good? |
-| **Main Insight** | The single most important thing you learned or realized |
-| **Next Week Focus** | Your primary intention for the coming week |
-
-**Pillar Scores section** — Update each pillar's score (1–10) for the week. These scores are saved with the review and drive the Pillar Trends chart.
-
-**AI Summary** — If you've configured an Anthropic API key (see [Section 9](#9-ai-features)), you can generate an AI-written summary of your week based on your check-ins, pillar scores, and active goals. Click "Generate" to produce it.
-
-**History panel** — The right side shows your past 8 weekly reviews for context.
-
-One review per Monday–Sunday week. Saving again overwrites the current week's entry.
-
-### 6.2 Monthly Review
-
-The Monthly Review zooms out to see the bigger arc. Use it at the end of each month.
-
-**Fields:**
-
-| Field | Prompt |
-|-------|--------|
-| **Highlights** | Best moments, biggest wins, what worked |
-| **Lowlights** | What was hard, what failed, what fell flat |
-| **Key Learnings** | The most important insights from this month |
-| **Next Month Intentions** | What you intend to do differently or focus on |
-
-**Pillar Scores** — Rate each pillar for the month.
-
-**Month/Year picker** — Navigate to any previous month to view or edit its review.
-
-**AI Summary** — Generate an AI analysis of the full month. Requires API key configuration.
-
-### 6.3 Decisions
-
-Decisions is a registry of significant choices you've made or are making. The goal is to make your decision-making process visible and reviewable.
-
-**Fields:**
-
-| Field | Purpose |
-|-------|---------|
-| **Title** | Short name for the decision |
-| **Context** | Background — what situation led to this decision? |
-| **Problem Statement** | What exactly are you deciding? |
-| **Options** | The alternatives you considered |
-| **Chosen Option** | What you decided |
-| **Rationale** | Why this option over the others |
-| **Trade-offs** | What you're giving up or accepting |
-| **Risks Accepted** | What could go wrong that you're knowingly accepting |
-| **Review Date** | When to revisit this decision — has the situation changed? |
-
-**Status:** Active / Under Review / Superseded / Archived
-
-**Alert A7** fires when a decision's review date has passed. This keeps decisions from becoming invisible commitments.
-
-### 6.4 Patterns
-
-Patterns are recurring behaviors, reactions, or tendencies you've noticed in yourself. Naming them is the first step to working with them.
-
-**Statuses:**
-
-| Status | Meaning |
-|--------|---------|
-| **Emerging** | You've noticed it a few times — watching to confirm |
-| **Confirmed** | It's definitely a pattern you exhibit |
-| **Resolved** | You've worked through it or it's no longer active |
-
-**Fields:** Name, description of the pattern, trigger (what tends to set it off).
-
-Add notes to a pattern to track observations over time.
-
----
-
-## 7. ANALYTICS — Visibility
-
-### 7.1 Metrics
-
-Metrics are objective, quantitative data points you want to track over time. Unlike pillar scores (which are subjective), metrics are numbers.
-
-**Examples:**
-- Training days per week
-- Weight (kg)
-- Hours of sleep
-- Books read
-- Revenue (monthly)
-
-Each metric entry has: pillar, name, value, unit, date, notes.
-
-To track a metric over time, add a new entry each time you record it. Entries are stored separately (not overwritten), giving you a historical record.
-
-### 7.2 Pillar Trends
-
-The Pillar Trends screen shows a line chart of your pillar scores over time. Each pillar gets its own colored line.
-
-**Week range selector:** 4 / 8 / 12 / 24 weeks
-
-Data points come from the pillar scores saved in your Weekly Reviews. If you haven't been doing weekly reviews consistently, this chart will have gaps.
-
-Use this screen to spot:
-- Long-term decline in a pillar that looks fine day-to-day
-- Which pillars are trending up vs. stuck
-- Correlations between pillar trajectories
-
----
-
-## 8. SYSTEM — Configuration
-
-### 8.1 Export
-
-Three export formats are available:
-
-| Format | What it contains | File name |
-|--------|-----------------|-----------|
-| **JSON Snapshot** | All your data (pillars, goals, decisions, check-ins, journal, reviews, patterns, metrics, tasks) | `gabrielos_export_YYYYMMDD_HHMMSS.json` |
-| **Journal Markdown** | Up to 1,000 most recent journal entries, formatted for reading | `journal_YYYYMMDD_HHMMSS.md` |
-| **SQLite Backup** | A full copy of the database file | `gabrielos_backup_YYYYMMDD_HHMMSS.db` |
-
-Click the corresponding button and choose where to save the file. All exports are one-time operations — they don't affect your live data.
-
-**Recommended practice:** Do a SQLite backup before deleting the database or making major changes. The JSON export is good for external use (sharing, archiving, feeding to other tools).
-
-### 8.2 Settings
-
-The Settings screen has two sections:
-
-**AI Configuration:**
-- **API Key** — Your Anthropic API key. Stored locally in `%LOCALAPPDATA%\GabrielOS\settings.json`. Never sent anywhere except directly to Anthropic's API.
-- **AI Model** — Which Claude model to use for AI summaries:
-
-| Model | Speed | Quality | Best for |
-|-------|-------|---------|---------|
-| `claude-haiku-4-5` | Fastest | Good | Daily use, quick summaries |
-| `claude-sonnet-4-6` | Balanced | Excellent | Default recommendation |
-| `claude-opus-4-6` | Slower | Best | Deep analysis, complex reviews |
-
-Click **Save** to apply. Click **Clear** to remove the API key and disable AI features.
-
----
-
-## 9. AI Features
-
-GabrielOS can connect to Anthropic's Claude API to generate written summaries of your weekly and monthly reviews. This is **completely optional** — the app works fully without it.
-
-### Getting an API Key
-
-1. Go to [console.anthropic.com](https://console.anthropic.com)
-2. Create an account or sign in
-3. Navigate to **API Keys** and create a new key
-4. Copy the key (it starts with `sk-ant-...`)
-
-### Configuring the Key
-
-1. Open **Settings** (sidebar or Ctrl+,)
-2. Paste your API key in the API Key field
-3. Choose your preferred model (Sonnet is recommended)
-4. Click **Save**
-
-The AI features will now be available on the Weekly Review and Monthly Review screens.
-
-### What the AI Does
-
-**Weekly Review AI Summary:**
-The AI receives your week's check-ins (energy, mood, clarity, tension values), your pillar scores, your active goals, and the text you wrote in the review fields. It generates a 2–4 paragraph prose summary identifying patterns in your week, what's working, and areas to watch.
-
-**Monthly Review AI Summary:**
-The AI receives all weekly reviews from the selected month, your monthly review fields, and your active goals. It generates a 3–5 paragraph analysis covering the month's arc, patterns, what worked, what needs attention, and actionable suggestions for next month.
-
-### Cost
-
-API calls use Anthropic's pay-per-use pricing. Haiku is the cheapest model and is well-suited for these summaries. A typical weekly review generation costs a fraction of a cent. If you have the Max subscription on claude.ai, note that this does **not** cover API usage — the API is billed separately through console.anthropic.com.
-
----
-
-## 10. Business Rules Reference
-
-### P1 Goal Cap
-
-- Maximum **3 active P1 goals** at any time.
-- The system blocks creation or update of a 4th P1 active goal.
-- To add a new P1: pause, complete, drop, or demote an existing one.
-
-### Mode Calculation
-
-Calculated from your most recent check-in values:
-
-| Condition | Mode |
-|-----------|------|
-| Energy ≤ 3 OR Tension ≥ 8 | **PROTECT** — Recover. Protect capacity. Reduce load. |
-| Clarity ≤ 4 AND Energy ≤ 5 | **SIMPLIFY** — Do less. Lower cognitive load. |
-| Energy ≥ 7 AND Clarity ≥ 7 AND Tension ≤ 4 | **EXPAND** — High capacity. Push forward on big things. |
-| Everything else | **FOCUS** — Default mode. Execute on current priorities. |
-
-### Alert System
-
-Alerts appear on the Dashboard (up to 5, highest severity first):
-
-| Alert | Trigger | Severity |
-|-------|---------|----------|
-| **A1 — Too many P1 fronts** | More than 3 active P1 goals | High |
-| **A2 — Goal without next action** | Active goal with no Next Action defined | Medium |
-| **A3 — Stale goal** | Active goal with no update in 21+ days | Medium |
-| **A4 — Neglected pillar** | Pillar not reviewed in 30+ days | Medium |
-| **A5 — Low energy streak** | 3+ consecutive check-ins with Energy ≤ 4 | High |
-| **A6 — Missing weekly review** | No review yet, or 9+ days since last | Low |
-| **A7 — Decision needs review** | Decision with a review date in the past | Medium |
-
-Resolving an alert means fixing the underlying condition (e.g., adding a next action to a stale goal), not dismissing the alert.
-
-### Other Rules
-
-- **One active Cycle Focus at a time.** Creating a new active cycle deactivates the previous one automatically.
-- **One check-in per day.** Saving again on the same day updates the existing entry.
-- **One weekly review per week.** Saving again during the same Monday–Sunday week overwrites the entry.
-
----
-
-## 11. Data & Privacy
-
-- All data is stored **locally** on your machine at `%LOCALAPPDATA%\GabrielOS\`
-- The database is a standard SQLite file: `gabrielos.db`
-- Settings (including your API key) are stored in `settings.json` in the same folder
-- Nothing is sent to external servers unless you've configured an API key and trigger an AI generation
-- When AI features are used, the context sent to Anthropic includes your check-in numbers, pillar scores, goal titles, and review text — no account information or identifying data beyond what you've written
-
-**To back up your data:** Use the SQLite Backup option in the Export screen.
-
-**To move to a new machine:** Copy the `%LOCALAPPDATA%\GabrielOS\` folder to the same path on the new machine, then install GabrielOS.
-
-**To start fresh:** Delete `gabrielos.db`. The app will re-create it with default data on next launch. Your settings (API key, model) will be preserved unless you also delete `settings.json`.
-
----
-
-## 12. Keyboard Shortcuts
+## Keyboard Shortcuts
 
 | Shortcut | Action |
 |----------|--------|
-| `Ctrl+D` | Go to Dashboard |
-| `Ctrl+J` | Go to Journal |
-| `Ctrl+G` | Go to Goals |
-| `Ctrl+K` | Open Search |
-| `Ctrl+,` | Go to Settings |
+| **Ctrl+D** | Dashboard |
+| **Ctrl+J** | Journal |
+| **Ctrl+G** | Goals |
+| **Ctrl+K** | Search |
+| **Ctrl+,** | Settings |
+| **Alt+Left** | Go Back |
+| **Ctrl+S** | Save (available on all screens with a save action) |
 
 ---
 
-*GabrielOS — built for clarity, not volume.*
+## Default Pillars
+
+GabrielOS ships with 7 foundation pillars, each set to Medium priority:
+
+| # | Pillar | Description |
+|---|--------|-------------|
+| 1 | **Body & Health** | Physical health, training, sleep, nutrition, body-mind integration |
+| 2 | **Mind & Stability** | Mental health, emotional regulation, therapy, meditation, inner peace |
+| 3 | **Career & Work** | Professional direction, positioning, skills, income, leadership |
+| 4 | **Finances** | Cash flow, savings, investments, financial independence |
+| 5 | **Relationships** | Family, friendships, romantic life, social connections |
+| 6 | **Learning & Expansion** | Courses, certifications, languages, intellectual growth |
+| 7 | **Freedom & Lifestyle** | Autonomy, living environment, daily structure, quality of life |
+
+These pillars are fully customizable. Rename them, rewrite their descriptions, change priorities, or add your own vision and current state assessments to make them yours.
