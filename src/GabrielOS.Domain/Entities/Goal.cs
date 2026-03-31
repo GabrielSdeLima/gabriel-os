@@ -20,6 +20,8 @@ public class Goal : BaseEntity
     public DateTime? ReviewDate { get; set; }
     public DateTime? CompletedAt { get; set; }
 
+    public override string ToString() => Title;
+
     // Navigation
     public User User { get; set; } = null!;
     public Pillar Pillar { get; set; } = null!;

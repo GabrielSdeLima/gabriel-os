@@ -91,7 +91,8 @@
                                                    Text="{Binding Score, Converter={StaticResource NullableScoreConverter}}"
                                                    Style="{StaticResource BodyText}"
                                                    VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                        <TextBlock Grid.Column="2" Text="{Binding Trend}"
+                                        <TextBlock Grid.Column="2"
+                                                   Text="{Binding Trend, Converter={StaticResource TrendConverter}}"
                                                    Style="{StaticResource SecondaryText}"
                                                    VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                     </Grid>

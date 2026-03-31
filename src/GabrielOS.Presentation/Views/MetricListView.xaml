@@ -25,6 +25,20 @@
             <StackPanel>
                 <TextBlock Text="Log Metric" Style="{StaticResource H3}" Margin="0,0,0,8"/>
 
+                <Grid Margin="0,0,0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="180"/>
+                        <ColumnDefinition Width="140"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="Metric Name" Style="{StaticResource SecondaryText}"/>
+                    <TextBlock Grid.Column="1" Text="Value" Style="{StaticResource SecondaryText}" Margin="6,0,0,0"/>
+                    <TextBlock Grid.Column="2" Text="Unit" Style="{StaticResource SecondaryText}" Margin="6,0,0,0"/>
+                    <TextBlock Grid.Column="3" Text="Pillar" Style="{StaticResource SecondaryText}" Margin="6,0,0,0"/>
+                    <TextBlock Grid.Column="4" Text="Date" Style="{StaticResource SecondaryText}" Margin="6,0,0,0"/>
+                </Grid>
                 <Grid Margin="0,0,0,8">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -42,10 +56,10 @@
                     <ComboBox Grid.Column="3" ItemsSource="{Binding Pillars}" SelectedItem="{Binding NewPillar}"
                               DisplayMemberPath="Name" Style="{StaticResource DarkComboBox}" Margin="0,0,6,0"/>
                     <DatePicker Grid.Column="4" SelectedDate="{Binding NewDate}"
-                                Foreground="{StaticResource TextPrimaryBrush}"
-                                Background="{StaticResource SurfaceBrush}"/>
+                                Style="{StaticResource DarkDatePicker}"/>
                 </Grid>
 
+                <TextBlock Text="Notes" Style="{StaticResource SecondaryText}" Margin="0,0,0,4"/>
                 <TextBox Text="{Binding NewNotes, UpdateSourceTrigger=PropertyChanged}"
                          Style="{StaticResource DarkTextBox}" Margin="0,0,0,8"/>
 

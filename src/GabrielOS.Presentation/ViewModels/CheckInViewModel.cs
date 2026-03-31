@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GabrielOS.Application.Rules;
@@ -26,6 +27,10 @@ public partial class CheckInViewModel : ObservableObject
     [ObservableProperty] private bool _isSaved;
     [ObservableProperty] private bool _isLoading = true;
     [ObservableProperty] private string _errorMessage = string.Empty;
+    [ObservableProperty] private ObservableCollection<CheckIn> _pastCheckIns = new();
+    [ObservableProperty] private CheckIn? _selectedHistoryCheckIn;
+    [ObservableProperty] private DateTime _selectedDate = DateTime.UtcNow.Date;
+    [ObservableProperty] private bool _isViewingHistory;
 
     public CheckInViewModel(CheckInService checkInService, IUserRepository userRepo)
     {
@@ -83,6 +88,9 @@ public partial class CheckInViewModel : ObservableObject
                 }
             }
             UpdatePreview();
+
+            var pastCheckIns = await _checkInService.GetRecentAsync(_userId, 90);
+            PastCheckIns = new ObservableCollection<CheckIn>(pastCheckIns);
         }
         catch (Exception ex)
         {
@@ -92,6 +100,50 @@ public partial class CheckInViewModel : ObservableObject
         {
             IsLoading = false;
         }
+    }
+
+    partial void OnSelectedDateChanged(DateTime value)
+    {
+        _ = LoadCheckInForDateAsync(value);
+    }
+
+    private async Task LoadCheckInForDateAsync(DateTime date)
+    {
+        if (_userId == Guid.Empty) return;
+
+        var checkIn = await _checkInService.GetByDateAsync(_userId, date);
+        if (checkIn != null && date.Date != DateTime.UtcNow.Date)
+        {
+            SelectedHistoryCheckIn = checkIn;
+            IsViewingHistory = true;
+        }
+        else if (date.Date == DateTime.UtcNow.Date)
+        {
+            SelectedHistoryCheckIn = null;
+            IsViewingHistory = false;
+        }
+        else
+        {
+            SelectedHistoryCheckIn = null;
+            IsViewingHistory = false;
+        }
+    }
+
+    [RelayCommand]
+    private void SelectDate(object? param)
+    {
+        if (param is DateTime date)
+        {
+            SelectedDate = date;
+        }
+    }
+
+    [RelayCommand]
+    private void BackToToday()
+    {
+        SelectedDate = DateTime.UtcNow.Date;
+        SelectedHistoryCheckIn = null;
+        IsViewingHistory = false;
     }
 
     [RelayCommand]

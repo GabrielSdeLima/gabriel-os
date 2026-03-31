@@ -15,6 +15,8 @@ public class Pillar : BaseEntity
     public int SortOrder { get; set; }
     public DateTime? LastReviewedAt { get; set; }
 
+    public override string ToString() => Name;
+
     // Navigation
     public User User { get; set; } = null!;
     public ICollection<Goal> Goals { get; set; } = new List<Goal>();

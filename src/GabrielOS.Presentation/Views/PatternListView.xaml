@@ -37,11 +37,13 @@
                               Style="{StaticResource DarkComboBox}"/>
                 </Grid>
 
+                <TextBlock Text="Description" Style="{StaticResource SecondaryText}" Margin="0,0,0,4"/>
                 <TextBox Text="{Binding NewDescription, UpdateSourceTrigger=PropertyChanged}"
                          Style="{StaticResource DarkTextBox}"
                          AcceptsReturn="True" TextWrapping="Wrap" MinHeight="48"
                          Margin="0,0,0,8"/>
 
+                <TextBlock Text="Trigger" Style="{StaticResource SecondaryText}" Margin="0,0,0,4"/>
                 <TextBox Text="{Binding NewTrigger, UpdateSourceTrigger=PropertyChanged}"
                          Style="{StaticResource DarkTextBox}"
                          Margin="0,0,0,8"/>

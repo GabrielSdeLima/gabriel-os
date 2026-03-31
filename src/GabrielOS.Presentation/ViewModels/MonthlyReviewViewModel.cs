@@ -116,6 +116,17 @@ public partial class MonthlyReviewViewModel : ObservableObject, IUnsavedChangesA
     partial void OnMonthChanged(int value) { _isInitialized = false; _ = LoadAsync(); }
 
     [RelayCommand]
+    private void LoadMonth(object? param)
+    {
+        if (param is MonthlyReview review)
+        {
+            _isInitialized = false;
+            Year = review.Year;
+            Month = review.Month;
+        }
+    }
+
+    [RelayCommand]
     private async Task SaveAsync()
     {
         var pillarScoresDict = PillarScores.ToDictionary(ps => ps.PillarId.ToString(), ps => ps.Score);

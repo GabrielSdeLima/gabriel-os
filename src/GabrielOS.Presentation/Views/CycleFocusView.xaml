@@ -74,17 +74,19 @@
                          AcceptsReturn="True" TextWrapping="Wrap" MinHeight="48"
                          Margin="0,0,0,8"/>
 
+                <TextBlock Text="Duration" Style="{StaticResource SecondaryText}" Margin="0,0,0,4"/>
                 <Grid Margin="0,0,0,8">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <DatePicker Grid.Column="0" SelectedDate="{Binding NewStartDate}"
-                                Margin="0,0,6,0" Foreground="{StaticResource TextPrimaryBrush}"
-                                Background="{StaticResource SurfaceBrush}"/>
-                    <DatePicker Grid.Column="1" SelectedDate="{Binding NewEndDate}"
-                                Foreground="{StaticResource TextPrimaryBrush}"
-                                Background="{StaticResource SurfaceBrush}"/>
+                                Style="{StaticResource DarkDatePicker}" Width="140"/>
+                    <TextBlock Grid.Column="1" Text="  →  " Style="{StaticResource SecondaryText}"
+                               VerticalAlignment="Center"/>
+                    <DatePicker Grid.Column="2" SelectedDate="{Binding NewEndDate}"
+                                Style="{StaticResource DarkDatePicker}" Width="140"/>
                 </Grid>
 
                 <Button Content="Activate Cycle" Style="{StaticResource PrimaryButton}"

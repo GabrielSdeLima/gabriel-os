@@ -33,6 +33,7 @@ public partial class WeeklyReviewViewModel : ObservableObject, IUnsavedChangesAw
     private Guid _userId;
     private WeeklyReview? _currentReview;
     private bool _isInitialized;
+    private DateTime _viewingWeekStart;
 
     public bool HasUnsavedChanges { get; private set; }
 
@@ -89,14 +90,15 @@ public partial class WeeklyReviewViewModel : ObservableObject, IUnsavedChangesAw
             if (user == null) return;
             _userId = user.Id;
 
-            var weekStart = ReviewService.GetCurrentWeekStart();
-            WeekLabel = $"Week of {weekStart:dd MMM yyyy}";
+            if (_viewingWeekStart == default)
+                _viewingWeekStart = ReviewService.GetCurrentWeekStart();
+            WeekLabel = $"Week of {_viewingWeekStart:dd MMM yyyy}";
 
             var pillars = await _pillarService.GetAllOrderedAsync(_userId);
             PillarScores = new ObservableCollection<PillarScore>(
                 pillars.Select(p => new PillarScore { PillarId = p.Id, PillarName = p.Name, Score = p.Score ?? 5 }));
 
-            _currentReview = await _reviewService.GetByWeekAsync(_userId, weekStart);
+            _currentReview = await _reviewService.GetByWeekAsync(_userId, _viewingWeekStart);
             if (_currentReview != null)
             {
                 Wins = _currentReview.Wins ?? string.Empty;
@@ -143,7 +145,7 @@ public partial class WeeklyReviewViewModel : ObservableObject, IUnsavedChangesAw
         var review = new WeeklyReview
         {
             UserId = _userId,
-            WeekStart = ReviewService.GetCurrentWeekStart(),
+            WeekStart = _viewingWeekStart,
             Wins = string.IsNullOrWhiteSpace(Wins) ? null : Wins.Trim(),
             Frictions = string.IsNullOrWhiteSpace(Frictions) ? null : Frictions.Trim(),
             AvoidedThings = string.IsNullOrWhiteSpace(AvoidedThings) ? null : AvoidedThings.Trim(),
@@ -163,6 +165,17 @@ public partial class WeeklyReviewViewModel : ObservableObject, IUnsavedChangesAw
     }
 
     [RelayCommand]
+    private async Task LoadWeekAsync(object? param)
+    {
+        if (param is DateTime weekStart)
+        {
+            _isInitialized = false;
+            _viewingWeekStart = weekStart;
+            await LoadAsync();
+        }
+    }
+
+    [RelayCommand]
     private async Task GenerateAISummaryAsync()
     {
         if (!_aiService.IsConfigured) return;
@@ -173,7 +186,7 @@ public partial class WeeklyReviewViewModel : ObservableObject, IUnsavedChangesAw
             var reviewForContext = new WeeklyReview
             {
                 UserId = _userId,
-                WeekStart = ReviewService.GetCurrentWeekStart(),
+                WeekStart = _viewingWeekStart,
                 Wins = Wins, Frictions = Frictions, AvoidedThings = AvoidedThings,
                 EnergyDrains = EnergyDrains, EnergyGains = EnergyGains,
                 MainInsight = MainInsight, NextWeekFocus = NextWeekFocus,

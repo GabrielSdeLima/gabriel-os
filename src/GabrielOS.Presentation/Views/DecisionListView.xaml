@@ -40,15 +40,18 @@
                               DisplayMemberPath="Name" Style="{StaticResource DarkComboBox}"/>
                 </Grid>
 
+                <TextBlock Text="Context / Problem" Style="{StaticResource SecondaryText}" Margin="0,0,0,4"/>
                 <TextBox Text="{Binding NewContext, UpdateSourceTrigger=PropertyChanged}"
                          Style="{StaticResource DarkTextBox}"
                          AcceptsReturn="True" TextWrapping="Wrap" MinHeight="60"
                          Margin="0,0,0,8"/>
 
+                <TextBlock Text="Chosen Option" Style="{StaticResource SecondaryText}" Margin="0,0,0,4"/>
                 <TextBox Text="{Binding NewChosenOption, UpdateSourceTrigger=PropertyChanged}"
                          Style="{StaticResource DarkTextBox}"
                          Margin="0,0,0,8"/>
 
+                <TextBlock Text="Rationale" Style="{StaticResource SecondaryText}" Margin="0,0,0,4"/>
                 <TextBox Text="{Binding NewRationale, UpdateSourceTrigger=PropertyChanged}"
                          Style="{StaticResource DarkTextBox}"
                          AcceptsReturn="True" TextWrapping="Wrap" MinHeight="48"

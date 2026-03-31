@@ -48,6 +48,8 @@ public partial class PillarListViewModel : ObservableObject
 
             var pillars = await _pillarService.GetAllOrderedAsync(user.Id);
             Pillars = new ObservableCollection<Pillar>(pillars);
+            if (SelectedPillar == null && Pillars.Count > 0)
+                SelectedPillar = Pillars[0];
         }
         finally
         {

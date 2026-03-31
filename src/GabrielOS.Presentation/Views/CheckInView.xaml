@@ -5,132 +5,213 @@
 
     <UserControl.Resources>
         <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <conv:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+        <conv:InverseToVisibilityConverter x:Key="InverseToVisibilityConverter"/>
     </UserControl.Resources>
 
     <UserControl.InputBindings>
         <KeyBinding Key="S" Modifiers="Ctrl" Command="{Binding SaveCommand}"/>
     </UserControl.InputBindings>
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <StackPanel MaxWidth="600">
-            <TextBlock Text="Daily Check-in" Style="{StaticResource H1}" Margin="0,0,0,20"/>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="280"/>
+        </Grid.ColumnDefinitions>
 
-            <!-- Mode Preview -->
-            <Border Style="{StaticResource Card}" Margin="0,0,0,20">
+        <!-- Main Form -->
+        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" Margin="0,0,16,0">
+            <StackPanel MaxWidth="600">
+                <TextBlock Text="Daily Check-in" Style="{StaticResource H1}" Margin="0,0,0,20"/>
+
+                <!-- Mode Preview -->
+                <Border Style="{StaticResource Card}" Margin="0,0,0,20">
+                    <StackPanel>
+                        <TextBlock Text="Suggested Mode" Style="{StaticResource H3}" Margin="0,0,0,6"/>
+                        <TextBlock Text="{Binding SuggestedModeText}" Style="{StaticResource BodyText}"
+                                   TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Sliders -->
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="How are you today?" Style="{StaticResource H3}" Margin="0,0,0,16"/>
+
+                        <StackPanel Margin="0,0,0,16">
+                            <Grid>
+                                <TextBlock Text="Energy" Style="{StaticResource BodyText}"/>
+                                <TextBlock Text="{Binding Energy}" Style="{StaticResource BodyText}"
+                                           HorizontalAlignment="Right" Foreground="{StaticResource PrimaryBrush}"/>
+                            </Grid>
+                            <Slider Value="{Binding Energy}" Minimum="1" Maximum="10"
+                                    TickFrequency="1" IsSnapToTickEnabled="True" Margin="0,4,0,0"/>
+                        </StackPanel>
+
+                        <StackPanel Margin="0,0,0,16">
+                            <Grid>
+                                <TextBlock Text="Mood" Style="{StaticResource BodyText}"/>
+                                <TextBlock Text="{Binding Mood}" Style="{StaticResource BodyText}"
+                                           HorizontalAlignment="Right" Foreground="{StaticResource PrimaryBrush}"/>
+                            </Grid>
+                            <Slider Value="{Binding Mood}" Minimum="1" Maximum="10"
+                                    TickFrequency="1" IsSnapToTickEnabled="True" Margin="0,4,0,0"/>
+                        </StackPanel>
+
+                        <StackPanel Margin="0,0,0,16">
+                            <Grid>
+                                <TextBlock Text="Clarity" Style="{StaticResource BodyText}"/>
+                                <TextBlock Text="{Binding Clarity}" Style="{StaticResource BodyText}"
+                                           HorizontalAlignment="Right" Foreground="{StaticResource PrimaryBrush}"/>
+                            </Grid>
+                            <Slider Value="{Binding Clarity}" Minimum="1" Maximum="10"
+                                    TickFrequency="1" IsSnapToTickEnabled="True" Margin="0,4,0,0"/>
+                        </StackPanel>
+
+                        <StackPanel Margin="0,0,0,16">
+                            <Grid>
+                                <TextBlock Text="Tension" Style="{StaticResource BodyText}"/>
+                                <TextBlock Text="{Binding Tension}" Style="{StaticResource BodyText}"
+                                           HorizontalAlignment="Right" Foreground="{StaticResource DangerBrush}"/>
+                            </Grid>
+                            <Slider Value="{Binding Tension}" Minimum="1" Maximum="10"
+                                    TickFrequency="1" IsSnapToTickEnabled="True" Margin="0,4,0,0"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- Text Fields -->
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="Physical State" Style="{StaticResource H3}" Margin="0,0,0,6"/>
+                        <TextBox Text="{Binding PhysicalState, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource DarkTextBox}" Margin="0,0,0,16"/>
+
+                        <TextBlock Text="Top Concern" Style="{StaticResource H3}" Margin="0,0,0,6"/>
+                        <TextBox Text="{Binding TopConcern, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource DarkTextBox}" Margin="0,0,0,16"/>
+
+                        <TextBlock Text="Top Priority for Today" Style="{StaticResource H3}" Margin="0,0,0,6"/>
+                        <TextBox Text="{Binding TopPriority, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource DarkTextBox}" Margin="0,0,0,16"/>
+
+                        <TextBlock Text="Anything else" Style="{StaticResource H3}" Margin="0,0,0,6"/>
+                        <TextBox Text="{Binding FreeText, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource DarkTextBox}"
+                                 AcceptsReturn="True" TextWrapping="Wrap" MinHeight="60"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Error -->
+                <Border Background="#3D1A1A" CornerRadius="4" Padding="8,6" Margin="0,0,0,8"
+                        Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}">
+                    <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource BodyText}"
+                               Foreground="{StaticResource DangerBrush}" TextWrapping="Wrap"/>
+                </Border>
+
+                <!-- Save -->
+                <Button Content="Save Check-in"
+                        Style="{StaticResource PrimaryButton}"
+                        Command="{Binding SaveCommand}"
+                        HorizontalAlignment="Left"
+                        Margin="0,8,0,12"/>
+
+                <!-- Save Confirmation -->
+                <Border Style="{StaticResource Card}"
+                        Margin="0,0,0,20"
+                        Visibility="{Binding IsSaved, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <StackPanel>
+                        <TextBlock Text="✓ Check-in saved" Style="{StaticResource H3}"
+                                   Foreground="{StaticResource AccentBrush}" Margin="0,0,0,6"/>
+                        <TextBlock Text="{Binding SuggestedModeText}" Style="{StaticResource BodyText}"
+                                   TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Right sidebar: History -->
+        <DockPanel Grid.Column="1">
+            <TextBlock DockPanel.Dock="Top" Text="History" Style="{StaticResource H3}" Margin="0,0,0,12"/>
+
+            <!-- Selected day detail -->
+            <Border DockPanel.Dock="Top" Style="{StaticResource Card}" Padding="12"
+                    Visibility="{Binding SelectedHistoryCheckIn, Converter={StaticResource NullToVisibilityConverter}}">
                 <StackPanel>
-                    <TextBlock Text="Suggested Mode" Style="{StaticResource H3}" Margin="0,0,0,6"/>
-                    <TextBlock Text="{Binding SuggestedModeText}" Style="{StaticResource BodyText}"
-                               TextWrapping="Wrap"/>
+                    <Grid Margin="0,0,0,8">
+                        <TextBlock Text="{Binding SelectedHistoryCheckIn.Date, StringFormat='{}{0:dd MMM yyyy}'}"
+                                   Style="{StaticResource H3}"/>
+                        <Button Content="← Today" Style="{StaticResource SecondaryButton}"
+                                Command="{Binding BackToTodayCommand}"
+                                HorizontalAlignment="Right"/>
+                    </Grid>
+                    <Grid Margin="0,2,0,2">
+                        <TextBlock Text="Energy" Style="{StaticResource SecondaryText}"/>
+                        <TextBlock Text="{Binding SelectedHistoryCheckIn.Energy}" Style="{StaticResource BodyText}"
+                                   HorizontalAlignment="Right" Foreground="{StaticResource PrimaryBrush}"/>
+                    </Grid>
+                    <Grid Margin="0,2,0,2">
+                        <TextBlock Text="Mood" Style="{StaticResource SecondaryText}"/>
+                        <TextBlock Text="{Binding SelectedHistoryCheckIn.Mood}" Style="{StaticResource BodyText}"
+                                   HorizontalAlignment="Right" Foreground="{StaticResource PrimaryBrush}"/>
+                    </Grid>
+                    <Grid Margin="0,2,0,2">
+                        <TextBlock Text="Clarity" Style="{StaticResource SecondaryText}"/>
+                        <TextBlock Text="{Binding SelectedHistoryCheckIn.Clarity}" Style="{StaticResource BodyText}"
+                                   HorizontalAlignment="Right" Foreground="{StaticResource PrimaryBrush}"/>
+                    </Grid>
+                    <Grid Margin="0,2,0,2">
+                        <TextBlock Text="Tension" Style="{StaticResource SecondaryText}"/>
+                        <TextBlock Text="{Binding SelectedHistoryCheckIn.Tension}" Style="{StaticResource BodyText}"
+                                   HorizontalAlignment="Right" Foreground="{StaticResource DangerBrush}"/>
+                    </Grid>
+                    <TextBlock Text="{Binding SelectedHistoryCheckIn.PhysicalState}" Style="{StaticResource SecondaryText}"
+                               TextWrapping="Wrap" Margin="0,6,0,0"
+                               Visibility="{Binding SelectedHistoryCheckIn.PhysicalState, Converter={StaticResource NullToVisibilityConverter}}"/>
+                    <TextBlock Text="{Binding SelectedHistoryCheckIn.TopPriority}" Style="{StaticResource SecondaryText}"
+                               TextWrapping="Wrap" Margin="0,4,0,0"
+                               Visibility="{Binding SelectedHistoryCheckIn.TopPriority, Converter={StaticResource NullToVisibilityConverter}}"/>
                 </StackPanel>
             </Border>
 
-            <!-- Sliders -->
-            <Border Style="{StaticResource Card}">
-                <StackPanel>
-                    <TextBlock Text="How are you today?" Style="{StaticResource H3}" Margin="0,0,0,16"/>
-
-                    <!-- Energy -->
-                    <StackPanel Margin="0,0,0,16">
-                        <Grid>
-                            <TextBlock Text="Energy" Style="{StaticResource BodyText}"/>
-                            <TextBlock Text="{Binding Energy}" Style="{StaticResource BodyText}"
-                                       HorizontalAlignment="Right" Foreground="{StaticResource PrimaryBrush}"/>
-                        </Grid>
-                        <Slider Value="{Binding Energy}" Minimum="1" Maximum="10"
-                                TickFrequency="1" IsSnapToTickEnabled="True" Margin="0,4,0,0"/>
-                    </StackPanel>
-
-                    <!-- Mood -->
-                    <StackPanel Margin="0,0,0,16">
-                        <Grid>
-                            <TextBlock Text="Mood" Style="{StaticResource BodyText}"/>
-                            <TextBlock Text="{Binding Mood}" Style="{StaticResource BodyText}"
-                                       HorizontalAlignment="Right" Foreground="{StaticResource PrimaryBrush}"/>
-                        </Grid>
-                        <Slider Value="{Binding Mood}" Minimum="1" Maximum="10"
-                                TickFrequency="1" IsSnapToTickEnabled="True" Margin="0,4,0,0"/>
-                    </StackPanel>
-
-                    <!-- Clarity -->
-                    <StackPanel Margin="0,0,0,16">
-                        <Grid>
-                            <TextBlock Text="Clarity" Style="{StaticResource BodyText}"/>
-                            <TextBlock Text="{Binding Clarity}" Style="{StaticResource BodyText}"
-                                       HorizontalAlignment="Right" Foreground="{StaticResource PrimaryBrush}"/>
-                        </Grid>
-                        <Slider Value="{Binding Clarity}" Minimum="1" Maximum="10"
-                                TickFrequency="1" IsSnapToTickEnabled="True" Margin="0,4,0,0"/>
-                    </StackPanel>
-
-                    <!-- Tension -->
-                    <StackPanel Margin="0,0,0,16">
-                        <Grid>
-                            <TextBlock Text="Tension" Style="{StaticResource BodyText}"/>
-                            <TextBlock Text="{Binding Tension}" Style="{StaticResource BodyText}"
-                                       HorizontalAlignment="Right" Foreground="{StaticResource DangerBrush}"/>
-                        </Grid>
-                        <Slider Value="{Binding Tension}" Minimum="1" Maximum="10"
-                                TickFrequency="1" IsSnapToTickEnabled="True" Margin="0,4,0,0"/>
-                    </StackPanel>
-                </StackPanel>
-            </Border>
-
-            <!-- Text Fields -->
-            <Border Style="{StaticResource Card}">
-                <StackPanel>
-                    <TextBlock Text="Physical State" Style="{StaticResource H3}" Margin="0,0,0,6"/>
-                    <TextBox Text="{Binding PhysicalState, UpdateSourceTrigger=PropertyChanged}"
-                             Style="{StaticResource DarkTextBox}" Margin="0,0,0,16"/>
-
-                    <TextBlock Text="Top Concern" Style="{StaticResource H3}" Margin="0,0,0,6"/>
-                    <TextBox Text="{Binding TopConcern, UpdateSourceTrigger=PropertyChanged}"
-                             Style="{StaticResource DarkTextBox}" Margin="0,0,0,16"/>
-
-                    <TextBlock Text="Top Priority for Today" Style="{StaticResource H3}" Margin="0,0,0,6"/>
-                    <TextBox Text="{Binding TopPriority, UpdateSourceTrigger=PropertyChanged}"
-                             Style="{StaticResource DarkTextBox}" Margin="0,0,0,16"/>
-
-                    <TextBlock Text="Anything else" Style="{StaticResource H3}" Margin="0,0,0,6"/>
-                    <TextBox Text="{Binding FreeText, UpdateSourceTrigger=PropertyChanged}"
-                             Style="{StaticResource DarkTextBox}"
-                             AcceptsReturn="True" TextWrapping="Wrap" MinHeight="60"/>
-                </StackPanel>
-            </Border>
-
-            <!-- Save -->
-            <Button Content="Save Check-in"
-                    Style="{StaticResource PrimaryButton}"
-                    Command="{Binding SaveCommand}"
-                    HorizontalAlignment="Left"
-                    Margin="0,8,0,12"/>
-
-            <!-- Error -->
-            <Border Background="#3D1A1A" CornerRadius="4" Padding="8,6" Margin="0,0,0,8">
-                <Border.Style>
-                    <Style TargetType="Border">
-                        <Setter Property="Visibility" Value="Collapsed"/>
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding ErrorMessage}" Value="">
-                                <Setter Property="Visibility" Value="Collapsed"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Border.Style>
-                <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource BodyText}"
-                           Foreground="{StaticResource DangerBrush}" TextWrapping="Wrap"/>
-            </Border>
-
-            <!-- Save Confirmation -->
-            <Border Style="{StaticResource Card}"
-                    Margin="0,0,0,20"
-                    Visibility="{Binding IsSaved, Converter={StaticResource BoolToVisibilityConverter}}">
-                <StackPanel>
-                    <TextBlock Text="✓ Check-in saved" Style="{StaticResource H3}"
-                               Foreground="{StaticResource AccentBrush}" Margin="0,0,0,6"/>
-                    <TextBlock Text="{Binding SuggestedModeText}" Style="{StaticResource BodyText}"
-                               TextWrapping="Wrap"/>
-                </StackPanel>
-            </Border>
-        </StackPanel>
-    </ScrollViewer>
+            <!-- Past check-ins list -->
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding PastCheckIns}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Style="{StaticResource Card}" Padding="10" Cursor="Hand">
+                                <Border.InputBindings>
+                                    <MouseBinding MouseAction="LeftClick"
+                                                  Command="{Binding DataContext.SelectDateCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                  CommandParameter="{Binding Date}"/>
+                                </Border.InputBindings>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="{Binding Date, StringFormat='{}{0:ddd dd MMM}'}"
+                                                   Style="{StaticResource BodyText}" FontWeight="SemiBold"/>
+                                        <TextBlock Style="{StaticResource SecondaryText}" Margin="0,2,0,0"
+                                                   Visibility="{Binding SuggestedMode, Converter={StaticResource NullToVisibilityConverter}}">
+                                            <Run Text="{Binding SuggestedMode}"/>
+                                        </TextBlock>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock Style="{StaticResource SecondaryText}" Margin="0,0,6,0">
+                                            <Run Text="E"/><Run Text="{Binding Energy}" Foreground="{StaticResource PrimaryBrush}"/>
+                                        </TextBlock>
+                                        <TextBlock Style="{StaticResource SecondaryText}">
+                                            <Run Text="T"/><Run Text="{Binding Tension}" Foreground="{StaticResource DangerBrush}"/>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </DockPanel>
+    </Grid>
 </UserControl>

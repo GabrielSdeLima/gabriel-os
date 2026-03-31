@@ -142,7 +142,12 @@
                 <ItemsControl ItemsSource="{Binding PastReviews}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border Style="{StaticResource Card}" Padding="12">
+                            <Border Style="{StaticResource Card}" Padding="12" Cursor="Hand">
+                                <Border.InputBindings>
+                                    <MouseBinding MouseAction="LeftClick"
+                                                  Command="{Binding DataContext.LoadMonthCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                  CommandParameter="{Binding}"/>
+                                </Border.InputBindings>
                                 <StackPanel>
                                     <TextBlock Text="{Binding MonthName}" Style="{StaticResource BodyText}"
                                                FontWeight="SemiBold"/>

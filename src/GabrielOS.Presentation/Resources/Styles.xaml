@@ -107,6 +107,7 @@
     <conv:IsActiveSectionConverter x:Key="IsActiveSectionConverter"/>
     <conv:NullableScoreConverter x:Key="NullableScoreConverter"/>
     <conv:NullableIntToDoubleConverter x:Key="NullableIntToDoubleConverter"/>
+    <conv:TrendConverter x:Key="TrendConverter"/>
 
     <!-- Sidebar Button (with active-section highlight) -->
     <Style x:Key="SidebarButton" TargetType="Button">
@@ -359,6 +360,17 @@
         <Setter Property="FontFamily" Value="{StaticResource MainFont}"/>
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
+    </Style>
+
+    <!-- DatePicker Style -->
+    <Style x:Key="DarkDatePicker" TargetType="DatePicker">
+        <Setter Property="Background" Value="{StaticResource SurfaceBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="4,2"/>
+        <Setter Property="FontFamily" Value="{StaticResource MainFont}"/>
+        <Setter Property="FontSize" Value="14"/>
     </Style>
 
     <!-- TextBox Style -->
