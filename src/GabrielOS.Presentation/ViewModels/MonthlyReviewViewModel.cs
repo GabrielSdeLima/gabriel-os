@@ -6,10 +6,11 @@ using GabrielOS.Application.Interfaces;
 using GabrielOS.Application.Services;
 using GabrielOS.Domain.Entities;
 using GabrielOS.Domain.Interfaces;
+using GabrielOS.Presentation.Navigation;
 
 namespace GabrielOS.Presentation.ViewModels;
 
-public partial class MonthlyReviewViewModel : ObservableObject
+public partial class MonthlyReviewViewModel : ObservableObject, IUnsavedChangesAware
 {
     private readonly MonthlyReviewService _reviewService;
     private readonly PillarService _pillarService;
@@ -17,6 +18,9 @@ public partial class MonthlyReviewViewModel : ObservableObject
     private readonly IAIService _aiService;
     private readonly IUserRepository _userRepo;
     private Guid _userId;
+    private bool _isInitialized;
+
+    public bool HasUnsavedChanges { get; private set; }
 
     [ObservableProperty] private int _year = DateTime.Today.Year;
     [ObservableProperty] private int _month = DateTime.Today.Month;
@@ -36,6 +40,11 @@ public partial class MonthlyReviewViewModel : ObservableObject
 
     public IReadOnlyList<int> MonthNumbers { get; } = Enumerable.Range(1, 12).ToList();
     public IReadOnlyList<int> YearNumbers { get; } = Enumerable.Range(DateTime.Today.Year - 3, 5).ToList();
+
+    partial void OnHighlightsChanged(string value) { if (_isInitialized) HasUnsavedChanges = true; }
+    partial void OnLowlightsChanged(string value) { if (_isInitialized) HasUnsavedChanges = true; }
+    partial void OnKeyLearningsChanged(string value) { if (_isInitialized) HasUnsavedChanges = true; }
+    partial void OnNextMonthIntentionsChanged(string value) { if (_isInitialized) HasUnsavedChanges = true; }
 
     public MonthlyReviewViewModel(
         MonthlyReviewService reviewService,
@@ -95,11 +104,16 @@ public partial class MonthlyReviewViewModel : ObservableObject
             var past = await _reviewService.GetRecentAsync(_userId, 12);
             PastReviews = new ObservableCollection<MonthlyReview>(past);
         }
-        finally { IsLoading = false; }
+        finally
+        {
+            HasUnsavedChanges = false;
+            _isInitialized = true;
+            IsLoading = false;
+        }
     }
 
-    partial void OnYearChanged(int value) => _ = LoadAsync();
-    partial void OnMonthChanged(int value) => _ = LoadAsync();
+    partial void OnYearChanged(int value) { _isInitialized = false; _ = LoadAsync(); }
+    partial void OnMonthChanged(int value) { _isInitialized = false; _ = LoadAsync(); }
 
     [RelayCommand]
     private async Task SaveAsync()
@@ -118,6 +132,7 @@ public partial class MonthlyReviewViewModel : ObservableObject
             AISummary = string.IsNullOrWhiteSpace(AiSummary) ? null : AiSummary.Trim(),
         };
         await _reviewService.SaveAsync(review);
+        HasUnsavedChanges = false;
         IsSaved = true;
         await LoadAsync();
     }

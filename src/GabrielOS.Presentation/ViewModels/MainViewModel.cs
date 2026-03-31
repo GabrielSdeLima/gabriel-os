@@ -13,12 +13,21 @@ public partial class MainViewModel : ObservableObject
 
     public string TodayFormatted { get; } = DateTime.Today.ToString("dddd, d MMM").ToLower();
 
+    public bool CanGoBack => _navigation.CanGoBack;
+
     public MainViewModel(INavigationService navigation)
     {
         _navigation = navigation;
-        _navigation.CurrentViewModelChanged += () => CurrentViewModel = _navigation.CurrentViewModel;
+        _navigation.CurrentViewModelChanged += () =>
+        {
+            CurrentViewModel = _navigation.CurrentViewModel;
+            OnPropertyChanged(nameof(CanGoBack));
+        };
         _navigation.NavigateTo<DashboardViewModel>();
     }
+
+    [RelayCommand(CanExecute = nameof(CanGoBack))]
+    private void GoBack() => _navigation.GoBack();
 
     [RelayCommand] private void NavigateToDashboard() { CurrentSection = "Dashboard"; _navigation.NavigateTo<DashboardViewModel>(); }
     [RelayCommand] private void NavigateToPillars() { CurrentSection = "Pillars"; _navigation.NavigateTo<PillarListViewModel>(); }

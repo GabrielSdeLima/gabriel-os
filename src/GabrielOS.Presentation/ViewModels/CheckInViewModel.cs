@@ -3,7 +3,6 @@ using CommunityToolkit.Mvvm.Input;
 using GabrielOS.Application.Rules;
 using GabrielOS.Application.Services;
 using GabrielOS.Domain.Entities;
-using GabrielOS.Domain.Enums;
 using GabrielOS.Domain.Interfaces;
 
 namespace GabrielOS.Presentation.ViewModels;
@@ -26,6 +25,7 @@ public partial class CheckInViewModel : ObservableObject
     [ObservableProperty] private string _suggestedModeText = string.Empty;
     [ObservableProperty] private bool _isSaved;
     [ObservableProperty] private bool _isLoading = true;
+    [ObservableProperty] private string _errorMessage = string.Empty;
 
     public CheckInViewModel(CheckInService checkInService, IUserRepository userRepo)
     {
@@ -49,6 +49,7 @@ public partial class CheckInViewModel : ObservableObject
     private async Task LoadAsync()
     {
         IsLoading = true;
+        ErrorMessage = string.Empty;
         try
         {
             var user = await _userRepo.GetDefaultUserAsync();
@@ -68,7 +69,24 @@ public partial class CheckInViewModel : ObservableObject
                 FreeText = today.FreeText ?? string.Empty;
                 IsSaved = true;
             }
+            else
+            {
+                // Pre-fill sliders from the most recent past check-in
+                var recent = await _checkInService.GetRecentAsync(_userId, 1);
+                var last = recent.FirstOrDefault();
+                if (last != null && last.Date < DateTime.UtcNow.Date)
+                {
+                    Energy = last.Energy;
+                    Mood = last.Mood;
+                    Clarity = last.Clarity;
+                    Tension = last.Tension;
+                }
+            }
             UpdatePreview();
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Erro ao carregar: {ex.Message}";
         }
         finally
         {
@@ -79,22 +97,30 @@ public partial class CheckInViewModel : ObservableObject
     [RelayCommand]
     private async Task SaveAsync()
     {
-        var checkIn = new CheckIn
+        ErrorMessage = string.Empty;
+        try
         {
-            UserId = _userId,
-            Date = DateTime.UtcNow.Date,
-            Energy = Energy,
-            Mood = Mood,
-            Clarity = Clarity,
-            Tension = Tension,
-            PhysicalState = string.IsNullOrWhiteSpace(PhysicalState) ? null : PhysicalState,
-            TopConcern = string.IsNullOrWhiteSpace(TopConcern) ? null : TopConcern,
-            TopPriority = string.IsNullOrWhiteSpace(TopPriority) ? null : TopPriority,
-            FreeText = string.IsNullOrWhiteSpace(FreeText) ? null : FreeText,
-        };
+            var checkIn = new CheckIn
+            {
+                UserId = _userId,
+                Date = DateTime.UtcNow.Date,
+                Energy = Energy,
+                Mood = Mood,
+                Clarity = Clarity,
+                Tension = Tension,
+                PhysicalState = string.IsNullOrWhiteSpace(PhysicalState) ? null : PhysicalState,
+                TopConcern = string.IsNullOrWhiteSpace(TopConcern) ? null : TopConcern,
+                TopPriority = string.IsNullOrWhiteSpace(TopPriority) ? null : TopPriority,
+                FreeText = string.IsNullOrWhiteSpace(FreeText) ? null : FreeText,
+            };
 
-        await _checkInService.SaveAsync(checkIn);
-        IsSaved = true;
-        UpdatePreview();
+            await _checkInService.SaveAsync(checkIn);
+            IsSaved = true;
+            UpdatePreview();
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Erro ao salvar: {ex.Message}";
+        }
     }
 }

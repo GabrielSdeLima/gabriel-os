@@ -20,10 +20,22 @@
             <TextBlock Text="weeks" Style="{StaticResource SecondaryText}" VerticalAlignment="Center"/>
         </StackPanel>
 
-        <!-- Chart -->
-        <Border Grid.Row="2" Style="{StaticResource Card}" Padding="0">
-            <oxy:PlotView Model="{Binding PillarTrendModel}" MinHeight="350"
-                          Background="Transparent"/>
-        </Border>
+        <!-- Chart or empty state -->
+        <Grid Grid.Row="2">
+            <Border Style="{StaticResource Card}" Padding="0"
+                    Visibility="{Binding HasData, Converter={StaticResource BoolToVisibilityConverter}}">
+                <oxy:PlotView Model="{Binding PillarTrendModel}" MinHeight="350"
+                              Background="Transparent"/>
+            </Border>
+            <StackPanel Style="{StaticResource EmptyState}"
+                        Visibility="{Binding HasData, Converter={StaticResource InverseToVisibilityConverter}}">
+                <TextBlock Text="📈" FontSize="32" Foreground="{StaticResource TextSecondaryBrush}"
+                           HorizontalAlignment="Center" Margin="0,0,0,8"/>
+                <TextBlock Text="No data yet" Style="{StaticResource H3}"
+                           HorizontalAlignment="Center" Margin="0,0,0,4"/>
+                <TextBlock Text="Log check-ins and pillar scores to see your trends here." Style="{StaticResource SecondaryText}"
+                           HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Grid>
     </Grid>
 </UserControl>

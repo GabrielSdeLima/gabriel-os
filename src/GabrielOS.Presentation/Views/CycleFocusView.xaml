@@ -8,6 +8,10 @@
         <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </UserControl.Resources>
 
+    <UserControl.InputBindings>
+        <KeyBinding Key="S" Modifiers="Ctrl" Command="{Binding CreateCycleCommand}"/>
+    </UserControl.InputBindings>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

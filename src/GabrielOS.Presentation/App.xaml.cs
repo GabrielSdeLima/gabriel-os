@@ -22,6 +22,13 @@ public partial class App : System.Windows.Application
     {
         base.OnStartup(e);
 
+        DispatcherUnhandledException += (_, ex) =>
+        {
+            MessageBox.Show($"Unexpected error: {ex.Exception.Message}", "Error",
+                MessageBoxButton.OK, MessageBoxImage.Error);
+            ex.Handled = true;
+        };
+
         var splash = new SplashWindow();
         splash.Show();
 
@@ -116,7 +123,15 @@ public partial class App : System.Windows.Application
     {
         using var scope = _serviceProvider.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        await context.Database.EnsureCreatedAsync();
+        try
+        {
+            await context.Database.MigrateAsync();
+        }
+        catch
+        {
+            // Fallback for existing databases created without migrations
+            await context.Database.EnsureCreatedAsync();
+        }
         await DefaultDataSeeder.SeedAsync(context);
     }
 

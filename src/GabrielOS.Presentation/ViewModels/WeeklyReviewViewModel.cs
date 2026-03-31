@@ -6,6 +6,7 @@ using GabrielOS.Application.Interfaces;
 using GabrielOS.Application.Services;
 using GabrielOS.Domain.Entities;
 using GabrielOS.Domain.Interfaces;
+using GabrielOS.Presentation.Navigation;
 
 namespace GabrielOS.Presentation.ViewModels;
 
@@ -22,7 +23,7 @@ public class PillarScore : ObservableObject
     }
 }
 
-public partial class WeeklyReviewViewModel : ObservableObject
+public partial class WeeklyReviewViewModel : ObservableObject, IUnsavedChangesAware
 {
     private readonly ReviewService _reviewService;
     private readonly PillarService _pillarService;
@@ -31,6 +32,9 @@ public partial class WeeklyReviewViewModel : ObservableObject
     private readonly IUserRepository _userRepo;
     private Guid _userId;
     private WeeklyReview? _currentReview;
+    private bool _isInitialized;
+
+    public bool HasUnsavedChanges { get; private set; }
 
     [ObservableProperty] private string _wins = string.Empty;
     [ObservableProperty] private string _frictions = string.Empty;
@@ -49,6 +53,15 @@ public partial class WeeklyReviewViewModel : ObservableObject
     [ObservableProperty] private string _weekLabel = string.Empty;
 
     public bool AIAvailable => _aiService.IsConfigured;
+
+    partial void OnWinsChanged(string value) { if (_isInitialized) HasUnsavedChanges = true; }
+    partial void OnFrictionsChanged(string value) { if (_isInitialized) HasUnsavedChanges = true; }
+    partial void OnAvoidedThingsChanged(string value) { if (_isInitialized) HasUnsavedChanges = true; }
+    partial void OnEnergyDrainsChanged(string value) { if (_isInitialized) HasUnsavedChanges = true; }
+    partial void OnEnergyGainsChanged(string value) { if (_isInitialized) HasUnsavedChanges = true; }
+    partial void OnMainInsightChanged(string value) { if (_isInitialized) HasUnsavedChanges = true; }
+    partial void OnNextWeekFocusChanged(string value) { if (_isInitialized) HasUnsavedChanges = true; }
+    partial void OnNotesChanged(string value) { if (_isInitialized) HasUnsavedChanges = true; }
 
     public WeeklyReviewViewModel(
         ReviewService reviewService,
@@ -113,7 +126,12 @@ public partial class WeeklyReviewViewModel : ObservableObject
             var pastReviews = await _reviewService.GetRecentAsync(_userId, 8);
             PastReviews = new ObservableCollection<WeeklyReview>(pastReviews);
         }
-        finally { IsLoading = false; }
+        finally
+        {
+            HasUnsavedChanges = false;
+            _isInitialized = true;
+            IsLoading = false;
+        }
     }
 
     [RelayCommand]
@@ -139,6 +157,7 @@ public partial class WeeklyReviewViewModel : ObservableObject
         };
 
         await _reviewService.SaveAsync(review);
+        HasUnsavedChanges = false;
         IsSaved = true;
         await LoadAsync();
     }

@@ -8,6 +8,10 @@
         <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </UserControl.Resources>
 
+    <UserControl.InputBindings>
+        <KeyBinding Key="S" Modifiers="Ctrl" Command="{Binding SaveDecisionCommand}"/>
+    </UserControl.InputBindings>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -74,6 +78,7 @@
             </Grid>
 
             <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <Grid>
                 <ItemsControl ItemsSource="{Binding Decisions}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
@@ -117,6 +122,16 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
+                    <StackPanel Style="{StaticResource EmptyState}"
+                                Visibility="{Binding Decisions.Count, Converter={StaticResource InverseToVisibilityConverter}}">
+                        <TextBlock Text="△" FontSize="32" Foreground="{StaticResource TextSecondaryBrush}"
+                                   HorizontalAlignment="Center" Margin="0,0,0,8"/>
+                        <TextBlock Text="No decisions logged" Style="{StaticResource H3}"
+                                   HorizontalAlignment="Center" Margin="0,0,0,4"/>
+                        <TextBlock Text="Log a decision above to start your decision journal." Style="{StaticResource SecondaryText}"
+                                   HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
             </ScrollViewer>
         </DockPanel>
     </Grid>

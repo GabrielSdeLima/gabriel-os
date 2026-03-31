@@ -8,6 +8,10 @@
         <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </UserControl.Resources>
 
+    <UserControl.InputBindings>
+        <KeyBinding Key="S" Modifiers="Ctrl" Command="{Binding SaveEntryCommand}"/>
+    </UserControl.InputBindings>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -84,6 +88,7 @@
             </Grid>
 
             <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <Grid>
                 <ItemsControl ItemsSource="{Binding Entries}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
@@ -134,6 +139,16 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
+                <StackPanel Style="{StaticResource EmptyState}"
+                            Visibility="{Binding Entries.Count, Converter={StaticResource InverseToVisibilityConverter}}">
+                    <TextBlock Text="◇" FontSize="32" Foreground="{StaticResource TextSecondaryBrush}"
+                               HorizontalAlignment="Center" Margin="0,0,0,8"/>
+                    <TextBlock Text="No journal entries yet" Style="{StaticResource H3}"
+                               HorizontalAlignment="Center" Margin="0,0,0,4"/>
+                    <TextBlock Text="Write your first entry above." Style="{StaticResource SecondaryText}"
+                               HorizontalAlignment="Center"/>
+                </StackPanel>
+                </Grid>
             </ScrollViewer>
         </DockPanel>
     </Grid>

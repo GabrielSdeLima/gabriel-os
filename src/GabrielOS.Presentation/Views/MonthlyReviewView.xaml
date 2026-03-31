@@ -8,6 +8,10 @@
         <conv:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
     </UserControl.Resources>
 
+    <UserControl.InputBindings>
+        <KeyBinding Key="S" Modifiers="Ctrl" Command="{Binding SaveCommand}"/>
+    </UserControl.InputBindings>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>

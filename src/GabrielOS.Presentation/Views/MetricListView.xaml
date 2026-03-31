@@ -7,6 +7,10 @@
         <conv:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
     </UserControl.Resources>
 
+    <UserControl.InputBindings>
+        <KeyBinding Key="S" Modifiers="Ctrl" Command="{Binding SaveMetricCommand}"/>
+    </UserControl.InputBindings>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -52,7 +56,8 @@
 
         <!-- List -->
         <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" Margin="0,4,0,0">
-            <ItemsControl ItemsSource="{Binding Metrics}">
+            <Grid>
+                <ItemsControl ItemsSource="{Binding Metrics}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Border Style="{StaticResource Card}">
@@ -87,7 +92,17 @@
                         </Border>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                </ItemsControl>
+                <StackPanel Style="{StaticResource EmptyState}"
+                            Visibility="{Binding Metrics.Count, Converter={StaticResource InverseToVisibilityConverter}}">
+                    <TextBlock Text="∿" FontSize="32" Foreground="{StaticResource TextSecondaryBrush}"
+                               HorizontalAlignment="Center" Margin="0,0,0,8"/>
+                    <TextBlock Text="No metrics logged" Style="{StaticResource H3}"
+                               HorizontalAlignment="Center" Margin="0,0,0,4"/>
+                    <TextBlock Text="Log your first metric above to start tracking." Style="{StaticResource SecondaryText}"
+                               HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Grid>
         </ScrollViewer>
     </Grid>
 </UserControl>

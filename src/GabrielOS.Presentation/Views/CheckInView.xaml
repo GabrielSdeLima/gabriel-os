@@ -7,6 +7,10 @@
         <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </UserControl.Resources>
 
+    <UserControl.InputBindings>
+        <KeyBinding Key="S" Modifiers="Ctrl" Command="{Binding SaveCommand}"/>
+    </UserControl.InputBindings>
+
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel MaxWidth="600">
             <TextBlock Text="Daily Check-in" Style="{StaticResource H1}" Margin="0,0,0,20"/>
@@ -99,6 +103,22 @@
                     Command="{Binding SaveCommand}"
                     HorizontalAlignment="Left"
                     Margin="0,8,0,12"/>
+
+            <!-- Error -->
+            <Border Background="#3D1A1A" CornerRadius="4" Padding="8,6" Margin="0,0,0,8">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ErrorMessage}" Value="">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource BodyText}"
+                           Foreground="{StaticResource DangerBrush}" TextWrapping="Wrap"/>
+            </Border>
 
             <!-- Save Confirmation -->
             <Border Style="{StaticResource Card}"

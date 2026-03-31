@@ -21,6 +21,7 @@ public partial class PillarTrendViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<Pillar> _pillars = new();
     [ObservableProperty] private bool _isLoading = true;
     [ObservableProperty] private int _weeksToShow = 8;
+    [ObservableProperty] private bool _hasData;
 
     public IReadOnlyList<int> WeekOptions { get; } = new[] { 4, 8, 12, 24 };
 
@@ -127,6 +128,7 @@ public partial class PillarTrendViewModel : ObservableObject
                 model.Series.Add(series);
         }
 
+        HasData = model.Series.Count > 0;
         PillarTrendModel = model;
     }
 }
