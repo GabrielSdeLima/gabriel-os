@@ -1,7 +1,9 @@
 using System.IO;
 using System.Windows;
+using GabrielOS.Application.Interfaces;
 using GabrielOS.Application.Services;
 using GabrielOS.Domain.Interfaces;
+using GabrielOS.Infrastructure.AI;
 using GabrielOS.Infrastructure.Data;
 using GabrielOS.Infrastructure.Repositories;
 using GabrielOS.Infrastructure.Seeding;
@@ -20,16 +22,24 @@ public partial class App : System.Windows.Application
     {
         base.OnStartup(e);
 
+        var splash = new SplashWindow();
+        splash.Show();
+
         var services = new ServiceCollection();
         ConfigureServices(services);
         _serviceProvider = services.BuildServiceProvider();
 
-        // Ensure database is created and seeded
         await InitializeDatabaseAsync();
 
-        // Show main window
+        // Keep splash visible long enough for the animation to be appreciated
+        await Task.Delay(700);
+
         var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
+        mainWindow.Opacity = 0;
         mainWindow.Show();
+        mainWindow.PlayFadeIn();
+
+        splash.PlayFadeOutAndClose();
     }
 
     private void ConfigureServices(IServiceCollection services)
@@ -48,11 +58,33 @@ public partial class App : System.Windows.Application
         services.AddScoped<IDecisionRepository, DecisionRepository>();
         services.AddScoped<IWeeklyReviewRepository, WeeklyReviewRepository>();
         services.AddScoped<ICycleFocusRepository, CycleFocusRepository>();
+        services.AddScoped<IPatternRepository, PatternRepository>();
+        services.AddScoped<IMetricRepository, MetricRepository>();
+        services.AddScoped<ITaskItemRepository, TaskItemRepository>();
+        services.AddScoped<IMonthlyReviewRepository, MonthlyReviewRepository>();
 
         // Application Services
         services.AddScoped<PillarService>();
         services.AddScoped<CheckInService>();
         services.AddScoped<JournalService>();
+        services.AddScoped<GoalService>();
+        services.AddScoped<DecisionService>();
+        services.AddScoped<ReviewService>();
+        services.AddScoped<CycleFocusService>();
+        services.AddScoped<AlertService>();
+        services.AddScoped<SearchService>();
+        services.AddScoped<TaskItemService>();
+        services.AddScoped<PatternService>();
+        services.AddScoped<MetricService>();
+        services.AddScoped<MonthlyReviewService>();
+        services.AddScoped<AIContextBuilder>();
+
+        // Singleton: settings lives outside DI scope
+        services.AddSingleton<SettingsService>();
+
+        // Infrastructure Services
+        services.AddScoped<ExportService>();
+        services.AddSingleton<IAIService, AnthropicService>();
 
         // Navigation
         services.AddSingleton<INavigationService, NavigationService>();
@@ -63,6 +95,18 @@ public partial class App : System.Windows.Application
         services.AddTransient<PillarListViewModel>();
         services.AddTransient<CheckInViewModel>();
         services.AddTransient<JournalListViewModel>();
+        services.AddTransient<GoalListViewModel>();
+        services.AddTransient<DecisionListViewModel>();
+        services.AddTransient<WeeklyReviewViewModel>();
+        services.AddTransient<CycleFocusViewModel>();
+        services.AddTransient<TaskListViewModel>();
+        services.AddTransient<PatternListViewModel>();
+        services.AddTransient<MetricListViewModel>();
+        services.AddTransient<SearchViewModel>();
+        services.AddTransient<MonthlyReviewViewModel>();
+        services.AddTransient<PillarTrendViewModel>();
+        services.AddTransient<ExportViewModel>();
+        services.AddTransient<SettingsViewModel>();
 
         // Windows
         services.AddTransient<MainWindow>();
@@ -72,11 +116,7 @@ public partial class App : System.Windows.Application
     {
         using var scope = _serviceProvider.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-        // Create database and apply migrations
         await context.Database.EnsureCreatedAsync();
-
-        // Seed default data
         await DefaultDataSeeder.SeedAsync(context);
     }
 

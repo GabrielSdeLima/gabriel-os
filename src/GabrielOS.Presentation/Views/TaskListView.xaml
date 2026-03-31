@@ -1,0 +1,101 @@
+<UserControl x:Class="GabrielOS.Presentation.Views.TaskListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="clr-namespace:GabrielOS.Presentation.Converters">
+
+    <UserControl.Resources>
+        <conv:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+        <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Tasks" Style="{StaticResource H1}" Margin="0,0,0,16"/>
+
+        <!-- Form -->
+        <Border Grid.Row="1" Style="{StaticResource Card}">
+            <StackPanel>
+                <TextBlock Text="{Binding FormTitle}" Style="{StaticResource H3}" Margin="0,0,0,8"/>
+
+                <Grid Margin="0,0,0,8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="140"/>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="180"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" Text="{Binding NewTitle, UpdateSourceTrigger=PropertyChanged}"
+                             Style="{StaticResource DarkTextBox}" Margin="0,0,6,0"/>
+                    <ComboBox Grid.Column="1" ItemsSource="{Binding StatusValues}" SelectedItem="{Binding NewStatus}"
+                              Style="{StaticResource DarkComboBox}" Margin="0,0,6,0"/>
+                    <ComboBox Grid.Column="2" ItemsSource="{Binding PriorityValues}" SelectedItem="{Binding NewPriority}"
+                              Style="{StaticResource DarkComboBox}" Margin="0,0,6,0"/>
+                    <ComboBox Grid.Column="3" ItemsSource="{Binding Goals}" SelectedItem="{Binding NewGoal}"
+                              DisplayMemberPath="Title" Style="{StaticResource DarkComboBox}"/>
+                </Grid>
+
+                <CheckBox Content="Mark as next action" Style="{StaticResource DarkCheckBox}"
+                          IsChecked="{Binding NewIsNextAction}" Margin="0,0,0,8"/>
+
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="{Binding SaveButtonText}" Style="{StaticResource PrimaryButton}"
+                            Command="{Binding SaveTaskCommand}" Margin="0,0,8,0"/>
+                    <Button Content="Cancel" Style="{StaticResource SecondaryButton}"
+                            Command="{Binding CancelEditCommand}"
+                            Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- Task List -->
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" Margin="0,4,0,0">
+            <ItemsControl ItemsSource="{Binding Tasks}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource Card}">
+                            <Grid>
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Status}" Style="{StaticResource SecondaryText}"
+                                                   Foreground="{StaticResource PrimaryBrush}" FontWeight="SemiBold"/>
+                                        <TextBlock Text=" · " Style="{StaticResource SecondaryText}"
+                                                   Visibility="{Binding Priority, Converter={StaticResource NullToVisibilityConverter}}"/>
+                                        <TextBlock Text="{Binding Priority}" Style="{StaticResource SecondaryText}"
+                                                   Visibility="{Binding Priority, Converter={StaticResource NullToVisibilityConverter}}"/>
+                                        <TextBlock Text=" · " Style="{StaticResource SecondaryText}"
+                                                   Visibility="{Binding Goal, Converter={StaticResource NullToVisibilityConverter}}"/>
+                                        <TextBlock Text="{Binding Goal.Title}" Style="{StaticResource SecondaryText}"
+                                                   Foreground="{StaticResource AccentBrush}" MaxWidth="200"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   Visibility="{Binding Goal, Converter={StaticResource NullToVisibilityConverter}}"/>
+                                        <TextBlock Text=" ★" Style="{StaticResource SecondaryText}"
+                                                   Foreground="{StaticResource WarningBrush}"
+                                                   Visibility="{Binding IsNextAction, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding Title}" Style="{StaticResource BodyText}"
+                                               FontWeight="SemiBold" Margin="0,4,0,0"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                    <Button Content="Done" Style="{StaticResource SecondaryButton}"
+                                            Command="{Binding DataContext.ToggleDoneCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding}" Margin="0,0,6,0"/>
+                                    <Button Content="Edit" Style="{StaticResource SecondaryButton}"
+                                            Command="{Binding DataContext.BeginEditTaskCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding}" Margin="0,0,6,0"/>
+                                    <Button Content="Delete" Style="{StaticResource DangerButton}"
+                                            Command="{Binding DataContext.DeleteTaskCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding}"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

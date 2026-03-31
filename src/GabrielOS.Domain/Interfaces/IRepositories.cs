@@ -25,11 +25,13 @@ public interface IGoalRepository : IRepository<Goal>
 {
     Task<IReadOnlyList<Goal>> GetByUserAsync(Guid userId);
     Task<int> CountActiveP1Async(Guid userId);
+    Task<IReadOnlyList<Goal>> SearchAsync(Guid userId, string query);
 }
 
 public interface IDecisionRepository : IRepository<Decision>
 {
     Task<IReadOnlyList<Decision>> GetByUserAsync(Guid userId);
+    Task<IReadOnlyList<Decision>> SearchAsync(Guid userId, string query);
 }
 
 public interface IWeeklyReviewRepository : IRepository<WeeklyReview>
@@ -41,9 +43,34 @@ public interface IWeeklyReviewRepository : IRepository<WeeklyReview>
 public interface ICycleFocusRepository : IRepository<CycleFocus>
 {
     Task<CycleFocus?> GetActiveAsync(Guid userId);
+    Task<IReadOnlyList<CycleFocus>> GetByUserAsync(Guid userId);
+}
+
+public interface IPatternRepository : IRepository<Pattern>
+{
+    Task<IReadOnlyList<Pattern>> GetByUserAsync(Guid userId);
+    Task<IReadOnlyList<Pattern>> SearchAsync(Guid userId, string query);
+}
+
+public interface IMetricRepository : IRepository<Metric>
+{
+    Task<IReadOnlyList<Metric>> GetByUserAsync(Guid userId);
+    Task<IReadOnlyList<Metric>> GetByPillarAsync(Guid userId, Guid pillarId);
+}
+
+public interface ITaskItemRepository : IRepository<TaskItem>
+{
+    Task<IReadOnlyList<TaskItem>> GetByUserAsync(Guid userId);
+    Task<IReadOnlyList<TaskItem>> GetByGoalAsync(Guid goalId);
 }
 
 public interface IUserRepository : IRepository<User>
 {
     Task<User?> GetDefaultUserAsync();
+}
+
+public interface IMonthlyReviewRepository : IRepository<MonthlyReview>
+{
+    Task<MonthlyReview?> GetByMonthAsync(Guid userId, int year, int month);
+    Task<IReadOnlyList<MonthlyReview>> GetRecentAsync(Guid userId, int count);
 }

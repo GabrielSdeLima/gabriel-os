@@ -160,3 +160,13 @@ public class TaskItemConfiguration : IEntityTypeConfiguration<TaskItem>
         builder.HasOne(e => e.Initiative).WithMany(i => i.Tasks).HasForeignKey(e => e.InitiativeId).IsRequired(false);
     }
 }
+
+public class MonthlyReviewConfiguration : IEntityTypeConfiguration<MonthlyReview>
+{
+    public void Configure(EntityTypeBuilder<MonthlyReview> builder)
+    {
+        builder.HasKey(e => e.Id);
+        builder.HasIndex(e => new { e.UserId, e.Year, e.Month }).IsUnique();
+        builder.HasOne(e => e.User).WithMany().HasForeignKey(e => e.UserId);
+    }
+}

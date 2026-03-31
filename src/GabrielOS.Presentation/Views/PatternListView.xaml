@@ -1,0 +1,91 @@
+<UserControl x:Class="GabrielOS.Presentation.Views.PatternListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="clr-namespace:GabrielOS.Presentation.Converters">
+
+    <UserControl.Resources>
+        <conv:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+        <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Patterns" Style="{StaticResource H1}" Margin="0,0,0,16"/>
+
+        <!-- Form -->
+        <Border Grid.Row="1" Style="{StaticResource Card}">
+            <StackPanel>
+                <TextBlock Text="{Binding FormTitle}" Style="{StaticResource H3}" Margin="0,0,0,8"/>
+
+                <Grid Margin="0,0,0,8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="160"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" Text="{Binding NewName, UpdateSourceTrigger=PropertyChanged}"
+                             Style="{StaticResource DarkTextBox}" Margin="0,0,6,0"/>
+                    <ComboBox Grid.Column="1" ItemsSource="{Binding StatusValues}" SelectedItem="{Binding NewStatus}"
+                              Style="{StaticResource DarkComboBox}"/>
+                </Grid>
+
+                <TextBox Text="{Binding NewDescription, UpdateSourceTrigger=PropertyChanged}"
+                         Style="{StaticResource DarkTextBox}"
+                         AcceptsReturn="True" TextWrapping="Wrap" MinHeight="48"
+                         Margin="0,0,0,8"/>
+
+                <TextBox Text="{Binding NewTrigger, UpdateSourceTrigger=PropertyChanged}"
+                         Style="{StaticResource DarkTextBox}"
+                         Margin="0,0,0,8"/>
+
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="{Binding SaveButtonText}" Style="{StaticResource PrimaryButton}"
+                            Command="{Binding SavePatternCommand}" Margin="0,0,8,0"/>
+                    <Button Content="Cancel" Style="{StaticResource SecondaryButton}"
+                            Command="{Binding CancelEditCommand}"
+                            Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- List -->
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" Margin="0,4,0,0">
+            <ItemsControl ItemsSource="{Binding Patterns}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource Card}">
+                            <StackPanel>
+                                <Grid>
+                                    <TextBlock Text="{Binding Status}" Style="{StaticResource SecondaryText}"
+                                               Foreground="{StaticResource PrimaryBrush}" FontWeight="SemiBold"/>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <Button Content="Edit" Style="{StaticResource SecondaryButton}"
+                                                Command="{Binding DataContext.BeginEditPatternCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}" Margin="0,0,6,0"/>
+                                        <Button Content="Delete" Style="{StaticResource DangerButton}"
+                                                Command="{Binding DataContext.DeletePatternCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}"/>
+                                    </StackPanel>
+                                </Grid>
+                                <TextBlock Text="{Binding Name}" Style="{StaticResource BodyText}"
+                                           FontWeight="SemiBold" Margin="0,4,0,2"/>
+                                <TextBlock Text="{Binding Description}" Style="{StaticResource SecondaryText}"
+                                           TextWrapping="Wrap" Margin="0,0,0,4"
+                                           Visibility="{Binding Description, Converter={StaticResource NullToVisibilityConverter}}"/>
+                                <TextBlock Style="{StaticResource SecondaryText}" TextWrapping="Wrap"
+                                           Visibility="{Binding Trigger, Converter={StaticResource NullToVisibilityConverter}}">
+                                    <Run Text="Trigger: " FontWeight="SemiBold"/>
+                                    <Run Text="{Binding Trigger}"/>
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

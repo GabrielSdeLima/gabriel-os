@@ -5,65 +5,139 @@
 
     <UserControl.Resources>
         <conv:NullableScoreConverter x:Key="NullableScoreConverter"/>
+        <conv:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+        <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </UserControl.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <StackPanel>
-            <TextBlock Text="Dashboard" Style="{StaticResource H1}" Margin="0,0,0,20"/>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="300"/>
+            </Grid.ColumnDefinitions>
 
-            <!-- Today's Mode -->
-            <Border Style="{StaticResource Card}">
-                <StackPanel>
-                    <TextBlock Text="Today's Mode" Style="{StaticResource H3}" Margin="0,0,0,8"/>
-                    <TextBlock Text="{Binding SuggestedModeText}" Style="{StaticResource BodyText}"
-                               TextWrapping="Wrap"/>
-                </StackPanel>
-            </Border>
+            <!-- Left column -->
+            <StackPanel Grid.Column="0" Margin="0,0,16,0">
+                <TextBlock Text="Dashboard" Style="{StaticResource H1}" Margin="0,0,0,20"/>
 
-            <!-- Journal This Week -->
-            <Border Style="{StaticResource Card}">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Journal entries this week: " Style="{StaticResource BodyText}"/>
-                    <TextBlock Text="{Binding WeeklyJournalCount}" Style="{StaticResource BodyText}"
-                               Foreground="{StaticResource PrimaryBrush}" FontWeight="SemiBold"/>
-                </StackPanel>
-            </Border>
+                <!-- Today's Mode -->
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="Today's Mode" Style="{StaticResource H3}" Margin="0,0,0,8"/>
+                        <TextBlock Text="{Binding SuggestedModeText}" Style="{StaticResource BodyText}"
+                                   TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
 
-            <!-- Pillar Scores -->
-            <Border Style="{StaticResource Card}">
-                <StackPanel>
-                    <TextBlock Text="Pillars" Style="{StaticResource H3}" Margin="0,0,0,12"/>
-                    <ItemsControl ItemsSource="{Binding Pillars}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Grid Margin="0,0,0,10">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="50"/>
-                                        <ColumnDefinition Width="80"/>
-                                    </Grid.ColumnDefinitions>
+                <!-- Active Cycle Focus -->
+                <Border Style="{StaticResource Card}"
+                        Visibility="{Binding ActiveCycleFocus, Converter={StaticResource NullToVisibilityConverter}}">
+                    <StackPanel>
+                        <TextBlock Text="Active Cycle" Style="{StaticResource H3}"
+                                   Foreground="{StaticResource AccentBrush}" Margin="0,0,0,6"/>
+                        <TextBlock Text="{Binding ActiveCycleFocus.Title}" Style="{StaticResource BodyText}"
+                                   FontWeight="SemiBold"/>
+                        <TextBlock Text="{Binding ActiveCycleFocus.Thesis}" Style="{StaticResource SecondaryText}"
+                                   TextWrapping="Wrap" Margin="0,4,0,0"
+                                   Visibility="{Binding ActiveCycleFocus.Thesis, Converter={StaticResource NullToVisibilityConverter}}"/>
+                    </StackPanel>
+                </Border>
 
-                                    <TextBlock Grid.Column="0" Text="{Binding Name}"
-                                               Style="{StaticResource BodyText}"
-                                               VerticalAlignment="Center"/>
+                <!-- Top P1 Goals -->
+                <Border Style="{StaticResource Card}"
+                        Visibility="{Binding TopGoals.Count, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <StackPanel>
+                        <TextBlock Text="P1 Goals" Style="{StaticResource H3}" Margin="0,0,0,10"/>
+                        <ItemsControl ItemsSource="{Binding TopGoals}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="0,0,0,8">
+                                        <TextBlock Text="{Binding Title}" Style="{StaticResource BodyText}"
+                                                   FontWeight="SemiBold"/>
+                                        <TextBlock Style="{StaticResource SecondaryText}" Margin="0,2,0,0"
+                                                   Visibility="{Binding NextAction, Converter={StaticResource NullToVisibilityConverter}}">
+                                            <Run Text="→ "/>
+                                            <Run Text="{Binding NextAction}"/>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
 
-                                    <TextBlock Grid.Column="1"
-                                               Text="{Binding Score, Converter={StaticResource NullableScoreConverter}}"
-                                               Style="{StaticResource BodyText}"
-                                               VerticalAlignment="Center"
-                                               HorizontalAlignment="Center"/>
+                <!-- Pillar Scores -->
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                            <TextBlock Text="Pillars" Style="{StaticResource H3}"/>
+                            <TextBlock Style="{StaticResource SecondaryText}" VerticalAlignment="Center" Margin="8,0,0,0">
+                                <Run Text="Journal this week: "/>
+                                <Run Text="{Binding WeeklyJournalCount}" Foreground="{StaticResource PrimaryBrush}" FontWeight="SemiBold"/>
+                            </TextBlock>
+                        </StackPanel>
+                        <ItemsControl ItemsSource="{Binding Pillars}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,0,0,8">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="48"/>
+                                            <ColumnDefinition Width="72"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{Binding Name}"
+                                                   Style="{StaticResource BodyText}" VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="1"
+                                                   Text="{Binding Score, Converter={StaticResource NullableScoreConverter}}"
+                                                   Style="{StaticResource BodyText}"
+                                                   VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                        <TextBlock Grid.Column="2" Text="{Binding Trend}"
+                                                   Style="{StaticResource SecondaryText}"
+                                                   VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
 
-                                    <TextBlock Grid.Column="2"
-                                               Text="{Binding Trend}"
-                                               Style="{StaticResource SecondaryText}"
-                                               VerticalAlignment="Center"
-                                               HorizontalAlignment="Center"/>
-                                </Grid>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </StackPanel>
-            </Border>
-        </StackPanel>
+            <!-- Right column: Alerts -->
+            <StackPanel Grid.Column="1">
+                <TextBlock Text="Alerts" Style="{StaticResource H3}" Margin="0,0,0,12"/>
+
+                <!-- No alerts (shown when Alerts list is empty) -->
+                <TextBlock Text="All clear. No alerts.">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock" BasedOn="{StaticResource SecondaryText}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Alerts.Count}" Value="0">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+
+                <ItemsControl ItemsSource="{Binding Alerts}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="{StaticResource SurfaceBrush}"
+                                    BorderBrush="{StaticResource BorderBrush}"
+                                    BorderThickness="1" CornerRadius="6"
+                                    Padding="12" Margin="0,0,0,8">
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Title}" Style="{StaticResource BodyText}"
+                                               FontWeight="SemiBold" Margin="0,0,0,4"/>
+                                    <TextBlock Text="{Binding Message}" Style="{StaticResource SecondaryText}"
+                                               TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Grid>
     </ScrollViewer>
 </UserControl>

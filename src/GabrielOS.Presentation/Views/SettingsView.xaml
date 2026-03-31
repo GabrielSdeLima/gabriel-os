@@ -1,0 +1,66 @@
+<UserControl x:Class="GabrielOS.Presentation.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="clr-namespace:GabrielOS.Presentation.Converters">
+
+    <UserControl.Resources>
+        <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel MaxWidth="600">
+            <TextBlock Text="Settings" Style="{StaticResource H1}" Margin="0,0,0,24"/>
+
+            <!-- AI Configuration -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="AI Integration" Style="{StaticResource H3}" Margin="0,0,0,6"/>
+                    <TextBlock Style="{StaticResource SecondaryText}" TextWrapping="Wrap" Margin="0,0,0,16">
+                        Connect your Anthropic API key to unlock AI-powered weekly summaries, monthly insights, and pattern detection.
+                    </TextBlock>
+
+                    <TextBlock Text="Anthropic API Key" Style="{StaticResource BodyText}" Margin="0,0,0,6"/>
+                    <PasswordBox x:Name="ApiKeyBox"
+                                 Margin="0,0,0,12"
+                                 FontFamily="Consolas" FontSize="13"
+                                 Background="{StaticResource SurfaceBrush}"
+                                 Foreground="{StaticResource TextPrimaryBrush}"
+                                 BorderBrush="{StaticResource BorderBrush}"
+                                 Padding="10,8"
+                                 PasswordChanged="ApiKeyBox_PasswordChanged"/>
+
+                    <TextBlock Text="Model" Style="{StaticResource BodyText}" Margin="0,0,0,6"/>
+                    <ComboBox ItemsSource="{Binding AvailableModels}"
+                              SelectedItem="{Binding AiModel}"
+                              Style="{StaticResource DarkComboBox}"
+                              Margin="0,0,0,16"/>
+
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="Save Settings" Style="{StaticResource PrimaryButton}"
+                                Command="{Binding SaveCommand}" Margin="0,0,8,0"/>
+                        <Button Content="Clear Key" Style="{StaticResource DangerButton}"
+                                Command="{Binding ClearCommand}"/>
+                    </StackPanel>
+
+                    <Border Background="{StaticResource SurfaceBrush}" CornerRadius="4" Padding="10,8"
+                            Margin="0,12,0,0"
+                            Visibility="{Binding IsSaved, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <TextBlock Text="✓ Settings saved" Style="{StaticResource BodyText}"
+                                   Foreground="{StaticResource AccentBrush}"/>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <!-- About -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="About" Style="{StaticResource H3}" Margin="0,0,0,8"/>
+                    <TextBlock Style="{StaticResource SecondaryText}" TextWrapping="Wrap">
+                        Gabriel OS — Personal Life Operating System<LineBreak/>
+                        Built with .NET 10, WPF, EF Core, SQLite
+                    </TextBlock>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

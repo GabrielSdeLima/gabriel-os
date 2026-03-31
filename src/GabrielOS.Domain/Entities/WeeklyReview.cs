@@ -13,6 +13,7 @@ public class WeeklyReview : BaseEntity
     public string? NextWeekFocus { get; set; }
     public string? PillarScoresJson { get; set; }
     public string? Notes { get; set; }
+    public string? AISummary { get; set; }
 
     // Navigation
     public User User { get; set; } = null!;

@@ -1,0 +1,59 @@
+<UserControl x:Class="GabrielOS.Presentation.Views.ExportView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="clr-namespace:GabrielOS.Presentation.Converters">
+
+    <UserControl.Resources>
+        <conv:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel MaxWidth="600">
+            <TextBlock Text="Export &amp; Backup" Style="{StaticResource H1}" Margin="0,0,0,24"/>
+
+            <!-- Database Backup -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Database Backup" Style="{StaticResource H3}" Margin="0,0,0,6"/>
+                    <TextBlock Style="{StaticResource SecondaryText}" TextWrapping="Wrap" Margin="0,0,0,12">
+                        Create a full copy of your SQLite database. Includes all entities and relationships.
+                    </TextBlock>
+                    <Button Content="Backup Database (SQLite)" Style="{StaticResource PrimaryButton}"
+                            Command="{Binding BackupDatabaseCommand}" HorizontalAlignment="Left"
+                            IsEnabled="{Binding IsExporting, Converter={StaticResource NullToVisibilityConverter}}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- JSON Export -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Full JSON Export" Style="{StaticResource H3}" Margin="0,0,0,6"/>
+                    <TextBlock Style="{StaticResource SecondaryText}" TextWrapping="Wrap" Margin="0,0,0,12">
+                        Export all your data as a structured JSON file. Useful for data portability or custom analysis.
+                    </TextBlock>
+                    <Button Content="Export as JSON" Style="{StaticResource SecondaryButton}"
+                            Command="{Binding ExportJsonCommand}" HorizontalAlignment="Left"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Journal Markdown -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Journal Export" Style="{StaticResource H3}" Margin="0,0,0,6"/>
+                    <TextBlock Style="{StaticResource SecondaryText}" TextWrapping="Wrap" Margin="0,0,0,12">
+                        Export all journal entries as a Markdown file. Great for archiving or reading offline.
+                    </TextBlock>
+                    <Button Content="Export Journal as Markdown" Style="{StaticResource SecondaryButton}"
+                            Command="{Binding ExportJournalMarkdownCommand}" HorizontalAlignment="Left"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Status message -->
+            <Border Style="{StaticResource Card}"
+                    Visibility="{Binding LastExportMessage, Converter={StaticResource NullToVisibilityConverter}}">
+                <TextBlock Text="{Binding LastExportMessage}" Style="{StaticResource BodyText}"
+                           TextWrapping="Wrap" Foreground="{StaticResource AccentBrush}"/>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
