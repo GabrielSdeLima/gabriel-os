@@ -14,7 +14,7 @@ public class CheckInService
     }
 
     public Task<CheckIn?> GetTodayAsync(Guid userId)
-        => _checkInRepo.GetByDateAsync(userId, DateTime.UtcNow.Date);
+        => _checkInRepo.GetByDateAsync(userId, DateTime.Now.Date);
 
     public Task<CheckIn?> GetByDateAsync(Guid userId, DateTime date)
         => _checkInRepo.GetByDateAsync(userId, date.Date);

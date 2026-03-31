@@ -108,6 +108,8 @@
     <conv:NullableScoreConverter x:Key="NullableScoreConverter"/>
     <conv:NullableIntToDoubleConverter x:Key="NullableIntToDoubleConverter"/>
     <conv:TrendConverter x:Key="TrendConverter"/>
+    <conv:TensionColorConverter x:Key="TensionColorConverter"/>
+    <conv:EnergyColorConverter x:Key="EnergyColorConverter"/>
 
     <!-- Sidebar Button (with active-section highlight) -->
     <Style x:Key="SidebarButton" TargetType="Button">

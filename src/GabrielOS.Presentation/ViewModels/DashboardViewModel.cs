@@ -9,6 +9,16 @@ using GabrielOS.Domain.Interfaces;
 
 namespace GabrielOS.Presentation.ViewModels;
 
+public class CalendarDay
+{
+    public DateTime Date { get; init; }
+    public bool IsCurrentMonth { get; init; }
+    public bool IsToday { get; init; }
+    public bool IsInCycle { get; init; }
+    public int? Energy { get; init; }
+    public bool HasCheckIn => Energy.HasValue;
+}
+
 public partial class DashboardViewModel : ObservableObject
 {
     private readonly PillarService _pillarService;
@@ -24,9 +34,12 @@ public partial class DashboardViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<Alert> _alerts = new();
     [ObservableProperty] private CycleFocus? _activeCycleFocus;
     [ObservableProperty] private CheckIn? _todayCheckIn;
-    [ObservableProperty] private string _suggestedModeText = "No check-in yet today.";
+    [ObservableProperty] private string _suggestedModeText = "Nenhum check-in ainda. Comece seu dia!";
     [ObservableProperty] private int _weeklyJournalCount;
     [ObservableProperty] private bool _isLoading = true;
+    [ObservableProperty] private ObservableCollection<CalendarDay> _calendarDays = new();
+    [ObservableProperty] private string _calendarTitle = string.Empty;
+    [ObservableProperty] private bool _hasCheckInToday;
 
     public DashboardViewModel(
         PillarService pillarService,
@@ -61,9 +74,10 @@ public partial class DashboardViewModel : ObservableObject
             Pillars = new ObservableCollection<Pillar>(pillars);
 
             TodayCheckIn = await _checkInService.GetTodayAsync(user.Id);
+            HasCheckInToday = TodayCheckIn != null;
             SuggestedModeText = TodayCheckIn?.SuggestedMode != null
                 ? $"{TodayCheckIn.SuggestedMode} — {ModeCalculator.GetModeDescription(TodayCheckIn.SuggestedMode.Value)}"
-                : "No check-in yet today. Start your day with a quick check-in.";
+                : "Nenhum check-in ainda. Comece seu dia!";
 
             WeeklyJournalCount = await _journalService.GetWeeklyCountAsync(user.Id);
 
@@ -76,7 +90,45 @@ public partial class DashboardViewModel : ObservableObject
 
             var alerts = await _alertService.GetAlertsAsync(user.Id);
             Alerts = new ObservableCollection<Alert>(alerts.Take(5));
+
+            var recentCheckIns = await _checkInService.GetRecentAsync(user.Id, 60);
+            BuildCalendar(recentCheckIns);
         }
         finally { IsLoading = false; }
+    }
+
+    private void BuildCalendar(IReadOnlyList<CheckIn> checkIns)
+    {
+        var today = DateTime.Now.Date;
+        var monthStart = new DateTime(today.Year, today.Month, 1);
+        var monthEnd = monthStart.AddMonths(1).AddDays(-1);
+
+        CalendarTitle = monthStart.ToString("MMMM yyyy");
+
+        var byDate = checkIns.ToDictionary(c => c.Date.Date);
+
+        // Pad to the Sunday before the 1st and Saturday after the last day
+        var calStart = monthStart.AddDays(-(int)monthStart.DayOfWeek);
+        var calEnd = monthEnd.AddDays(6 - (int)monthEnd.DayOfWeek);
+
+        var days = new List<CalendarDay>();
+        for (var d = calStart; d <= calEnd; d = d.AddDays(1))
+        {
+            byDate.TryGetValue(d, out var ci);
+            var isInCycle = ActiveCycleFocus != null
+                && d >= ActiveCycleFocus.StartDate.Date
+                && d <= ActiveCycleFocus.EndDate.Date;
+
+            days.Add(new CalendarDay
+            {
+                Date = d,
+                IsCurrentMonth = d.Month == today.Month,
+                IsToday = d == today,
+                IsInCycle = isInCycle,
+                Energy = ci?.Energy
+            });
+        }
+
+        CalendarDays = new ObservableCollection<CalendarDay>(days);
     }
 }

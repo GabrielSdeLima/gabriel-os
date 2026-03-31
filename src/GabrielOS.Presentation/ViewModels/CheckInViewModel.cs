@@ -24,13 +24,32 @@ public partial class CheckInViewModel : ObservableObject
     [ObservableProperty] private string _freeText = string.Empty;
 
     [ObservableProperty] private string _suggestedModeText = string.Empty;
-    [ObservableProperty] private bool _isSaved;
     [ObservableProperty] private bool _isLoading = true;
     [ObservableProperty] private string _errorMessage = string.Empty;
     [ObservableProperty] private ObservableCollection<CheckIn> _pastCheckIns = new();
     [ObservableProperty] private CheckIn? _selectedHistoryCheckIn;
-    [ObservableProperty] private DateTime _selectedDate = DateTime.UtcNow.Date;
+    [ObservableProperty] private DateTime _selectedDate = DateTime.Now.Date;
     [ObservableProperty] private bool _isViewingHistory;
+
+    // State flags
+    [ObservableProperty] private bool _isDoneToday;
+    [ObservableProperty] private bool _isEditing;
+
+    // Derived display states
+    public bool ShowForm => !IsDoneToday || IsEditing;
+    public bool ShowDoneState => IsDoneToday && !IsEditing;
+
+    partial void OnIsDoneTodayChanged(bool value)
+    {
+        OnPropertyChanged(nameof(ShowForm));
+        OnPropertyChanged(nameof(ShowDoneState));
+    }
+
+    partial void OnIsEditingChanged(bool value)
+    {
+        OnPropertyChanged(nameof(ShowForm));
+        OnPropertyChanged(nameof(ShowDoneState));
+    }
 
     public CheckInViewModel(CheckInService checkInService, IUserRepository userRepo)
     {
@@ -72,20 +91,23 @@ public partial class CheckInViewModel : ObservableObject
                 TopConcern = today.TopConcern ?? string.Empty;
                 TopPriority = today.TopPriority ?? string.Empty;
                 FreeText = today.FreeText ?? string.Empty;
-                IsSaved = true;
+                IsDoneToday = true;
+                IsEditing = false;
             }
             else
             {
                 // Pre-fill sliders from the most recent past check-in
                 var recent = await _checkInService.GetRecentAsync(_userId, 1);
                 var last = recent.FirstOrDefault();
-                if (last != null && last.Date < DateTime.UtcNow.Date)
+                if (last != null && last.Date < DateTime.Now.Date)
                 {
                     Energy = last.Energy;
                     Mood = last.Mood;
                     Clarity = last.Clarity;
                     Tension = last.Tension;
                 }
+                IsDoneToday = false;
+                IsEditing = false;
             }
             UpdatePreview();
 
@@ -102,6 +124,16 @@ public partial class CheckInViewModel : ObservableObject
         }
     }
 
+    [RelayCommand]
+    private void StartEditing() => IsEditing = true;
+
+    [RelayCommand]
+    private void CancelEditing()
+    {
+        IsEditing = false;
+        _ = LoadAsync(); // reload to reset form fields
+    }
+
     partial void OnSelectedDateChanged(DateTime value)
     {
         _ = LoadCheckInForDateAsync(value);
@@ -112,12 +144,12 @@ public partial class CheckInViewModel : ObservableObject
         if (_userId == Guid.Empty) return;
 
         var checkIn = await _checkInService.GetByDateAsync(_userId, date);
-        if (checkIn != null && date.Date != DateTime.UtcNow.Date)
+        if (checkIn != null && date.Date != DateTime.Now.Date)
         {
             SelectedHistoryCheckIn = checkIn;
             IsViewingHistory = true;
         }
-        else if (date.Date == DateTime.UtcNow.Date)
+        else if (date.Date == DateTime.Now.Date)
         {
             SelectedHistoryCheckIn = null;
             IsViewingHistory = false;
@@ -141,7 +173,7 @@ public partial class CheckInViewModel : ObservableObject
     [RelayCommand]
     private void BackToToday()
     {
-        SelectedDate = DateTime.UtcNow.Date;
+        SelectedDate = DateTime.Now.Date;
         SelectedHistoryCheckIn = null;
         IsViewingHistory = false;
     }
@@ -155,7 +187,7 @@ public partial class CheckInViewModel : ObservableObject
             var checkIn = new CheckIn
             {
                 UserId = _userId,
-                Date = DateTime.UtcNow.Date,
+                Date = DateTime.Now.Date,
                 Energy = Energy,
                 Mood = Mood,
                 Clarity = Clarity,
@@ -167,8 +199,13 @@ public partial class CheckInViewModel : ObservableObject
             };
 
             await _checkInService.SaveAsync(checkIn);
-            IsSaved = true;
+            IsDoneToday = true;
+            IsEditing = false;
             UpdatePreview();
+
+            // Refresh history list
+            var pastCheckIns = await _checkInService.GetRecentAsync(_userId, 90);
+            PastCheckIns = new ObservableCollection<CheckIn>(pastCheckIns);
         }
         catch (Exception ex)
         {

@@ -7,138 +7,312 @@
         <conv:NullableScoreConverter x:Key="NullableScoreConverter"/>
         <conv:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
         <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <conv:InverseToVisibilityConverter x:Key="InverseToVisibilityConverter"/>
+        <conv:EnergyColorConverter x:Key="EnergyColorConverter"/>
+        <conv:TensionColorConverter x:Key="TensionColorConverter"/>
     </UserControl.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="300"/>
-            </Grid.ColumnDefinitions>
+        <StackPanel>
 
-            <!-- Left column -->
-            <StackPanel Grid.Column="0" Margin="0,0,16,0">
-                <TextBlock Text="Dashboard" Style="{StaticResource H1}" Margin="0,0,0,20"/>
+            <!-- Top row: two columns -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="300"/>
+                </Grid.ColumnDefinitions>
 
-                <!-- Today's Mode -->
-                <Border Style="{StaticResource Card}">
-                    <StackPanel>
-                        <TextBlock Text="Today's Mode" Style="{StaticResource H3}" Margin="0,0,0,8"/>
-                        <TextBlock Text="{Binding SuggestedModeText}" Style="{StaticResource BodyText}"
-                                   TextWrapping="Wrap"/>
-                    </StackPanel>
-                </Border>
+                <!-- Left column -->
+                <StackPanel Grid.Column="0" Margin="0,0,16,0">
+                    <TextBlock Text="Dashboard" Style="{StaticResource H1}" Margin="0,0,0,20"/>
 
-                <!-- Active Cycle Focus -->
-                <Border Style="{StaticResource Card}"
-                        Visibility="{Binding ActiveCycleFocus, Converter={StaticResource NullToVisibilityConverter}}">
-                    <StackPanel>
-                        <TextBlock Text="Active Cycle" Style="{StaticResource H3}"
-                                   Foreground="{StaticResource AccentBrush}" Margin="0,0,0,6"/>
-                        <TextBlock Text="{Binding ActiveCycleFocus.Title}" Style="{StaticResource BodyText}"
-                                   FontWeight="SemiBold"/>
-                        <TextBlock Text="{Binding ActiveCycleFocus.Thesis}" Style="{StaticResource SecondaryText}"
-                                   TextWrapping="Wrap" Margin="0,4,0,0"
-                                   Visibility="{Binding ActiveCycleFocus.Thesis, Converter={StaticResource NullToVisibilityConverter}}"/>
-                    </StackPanel>
-                </Border>
-
-                <!-- Top P1 Goals -->
-                <Border Style="{StaticResource Card}"
-                        Visibility="{Binding TopGoals.Count, Converter={StaticResource BoolToVisibilityConverter}}">
-                    <StackPanel>
-                        <TextBlock Text="P1 Goals" Style="{StaticResource H3}" Margin="0,0,0,10"/>
-                        <ItemsControl ItemsSource="{Binding TopGoals}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel Margin="0,0,0,8">
-                                        <TextBlock Text="{Binding Title}" Style="{StaticResource BodyText}"
-                                                   FontWeight="SemiBold"/>
-                                        <TextBlock Style="{StaticResource SecondaryText}" Margin="0,2,0,0"
-                                                   Visibility="{Binding NextAction, Converter={StaticResource NullToVisibilityConverter}}">
-                                            <Run Text="→ "/>
-                                            <Run Text="{Binding NextAction}"/>
-                                        </TextBlock>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </StackPanel>
-                </Border>
-
-                <!-- Pillar Scores -->
-                <Border Style="{StaticResource Card}">
-                    <StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
-                            <TextBlock Text="Pillars" Style="{StaticResource H3}"/>
-                            <TextBlock Style="{StaticResource SecondaryText}" VerticalAlignment="Center" Margin="8,0,0,0">
-                                <Run Text="Journal this week: "/>
-                                <Run Text="{Binding WeeklyJournalCount}" Foreground="{StaticResource PrimaryBrush}" FontWeight="SemiBold"/>
-                            </TextBlock>
+                    <!-- Check-in prompt when not done today -->
+                    <Border Style="{StaticResource Card}"
+                            BorderBrush="{StaticResource PrimaryBrush}" BorderThickness="1"
+                            Visibility="{Binding HasCheckInToday, Converter={StaticResource InverseToVisibilityConverter}}">
+                        <StackPanel>
+                            <TextBlock Text="Você ainda não fez check-in hoje." Style="{StaticResource BodyText}"
+                                       FontWeight="SemiBold"/>
+                            <TextBlock Text="Registre seu estado para começar o dia com clareza."
+                                       Style="{StaticResource SecondaryText}" Margin="0,2,0,0"/>
                         </StackPanel>
-                        <ItemsControl ItemsSource="{Binding Pillars}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid Margin="0,0,0,8">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="48"/>
-                                            <ColumnDefinition Width="72"/>
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="{Binding Name}"
-                                                   Style="{StaticResource BodyText}" VerticalAlignment="Center"/>
-                                        <TextBlock Grid.Column="1"
-                                                   Text="{Binding Score, Converter={StaticResource NullableScoreConverter}}"
-                                                   Style="{StaticResource BodyText}"
-                                                   VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                        <TextBlock Grid.Column="2"
-                                                   Text="{Binding Trend, Converter={StaticResource TrendConverter}}"
-                                                   Style="{StaticResource SecondaryText}"
-                                                   VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                    </Grid>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
+                    </Border>
+
+                    <!-- Today's Mode (only when done) -->
+                    <Border Style="{StaticResource Card}"
+                            Visibility="{Binding HasCheckInToday, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <StackPanel>
+                            <TextBlock Text="Modo de hoje" Style="{StaticResource H3}" Margin="0,0,0,8"/>
+                            <TextBlock Text="{Binding SuggestedModeText}" Style="{StaticResource BodyText}"
+                                       TextWrapping="Wrap"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,8,0,0"
+                                        Visibility="{Binding TodayCheckIn, Converter={StaticResource NullToVisibilityConverter}}">
+                                <TextBlock Style="{StaticResource SecondaryText}" Margin="0,0,12,0">
+                                    <Run Text="E "/>
+                                    <Run Text="{Binding TodayCheckIn.Energy}" Foreground="{StaticResource PrimaryBrush}" FontWeight="SemiBold"/>
+                                </TextBlock>
+                                <TextBlock Style="{StaticResource SecondaryText}" Margin="0,0,12,0">
+                                    <Run Text="M "/>
+                                    <Run Text="{Binding TodayCheckIn.Mood}" Foreground="{StaticResource PrimaryBrush}" FontWeight="SemiBold"/>
+                                </TextBlock>
+                                <TextBlock Style="{StaticResource SecondaryText}" Margin="0,0,12,0">
+                                    <Run Text="C "/>
+                                    <Run Text="{Binding TodayCheckIn.Clarity}" Foreground="{StaticResource PrimaryBrush}" FontWeight="SemiBold"/>
+                                </TextBlock>
+                                <TextBlock Style="{StaticResource SecondaryText}">
+                                    <Run Text="T "/>
+                                    <Run Text="{Binding TodayCheckIn.Tension}" FontWeight="SemiBold"
+                                         Foreground="{Binding TodayCheckIn.Tension, Converter={StaticResource TensionColorConverter}}"/>
+                                </TextBlock>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Active Cycle Focus -->
+                    <Border Style="{StaticResource Card}"
+                            Visibility="{Binding ActiveCycleFocus, Converter={StaticResource NullToVisibilityConverter}}">
+                        <StackPanel>
+                            <TextBlock Text="Ciclo Ativo" Style="{StaticResource H3}"
+                                       Foreground="{StaticResource AccentBrush}" Margin="0,0,0,6"/>
+                            <TextBlock Text="{Binding ActiveCycleFocus.Title}" Style="{StaticResource BodyText}"
+                                       FontWeight="SemiBold"/>
+                            <TextBlock Style="{StaticResource SecondaryText}" Margin="0,2,0,0">
+                                <Run Text="{Binding ActiveCycleFocus.StartDate, StringFormat='{}{0:dd MMM}'}"/>
+                                <Run Text=" — "/>
+                                <Run Text="{Binding ActiveCycleFocus.EndDate, StringFormat='{}{0:dd MMM yyyy}'}"/>
+                            </TextBlock>
+                            <TextBlock Text="{Binding ActiveCycleFocus.Thesis}" Style="{StaticResource SecondaryText}"
+                                       TextWrapping="Wrap" Margin="0,4,0,0"
+                                       Visibility="{Binding ActiveCycleFocus.Thesis, Converter={StaticResource NullToVisibilityConverter}}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Top P1 Goals -->
+                    <Border Style="{StaticResource Card}"
+                            Visibility="{Binding TopGoals.Count, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <StackPanel>
+                            <TextBlock Text="Metas P1" Style="{StaticResource H3}" Margin="0,0,0,10"/>
+                            <ItemsControl ItemsSource="{Binding TopGoals}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Margin="0,0,0,8">
+                                            <TextBlock Text="{Binding Title}" Style="{StaticResource BodyText}"
+                                                       FontWeight="SemiBold"/>
+                                            <TextBlock Style="{StaticResource SecondaryText}" Margin="0,2,0,0"
+                                                       Visibility="{Binding NextAction, Converter={StaticResource NullToVisibilityConverter}}">
+                                                <Run Text="→ "/>
+                                                <Run Text="{Binding NextAction}"/>
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Pillar Scores -->
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <TextBlock Text="Pilares" Style="{StaticResource H3}"/>
+                                <TextBlock Style="{StaticResource SecondaryText}" VerticalAlignment="Center" Margin="8,0,0,0">
+                                    <Run Text="— Journal esta semana: "/>
+                                    <Run Text="{Binding WeeklyJournalCount}" Foreground="{StaticResource PrimaryBrush}" FontWeight="SemiBold"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <!-- Column headers -->
+                            <Grid Margin="0,0,0,6">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="48"/>
+                                    <ColumnDefinition Width="72"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="1" Text="Nota" Style="{StaticResource SecondaryText}"
+                                           HorizontalAlignment="Center" FontSize="11"/>
+                                <TextBlock Grid.Column="2" Text="Tendência" Style="{StaticResource SecondaryText}"
+                                           HorizontalAlignment="Center" FontSize="11"/>
+                            </Grid>
+                            <ItemsControl ItemsSource="{Binding Pillars}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="0,0,0,8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="48"/>
+                                                <ColumnDefinition Width="72"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Text="{Binding Name}"
+                                                       Style="{StaticResource BodyText}" VerticalAlignment="Center"/>
+                                            <TextBlock Grid.Column="1"
+                                                       Text="{Binding Score, Converter={StaticResource NullableScoreConverter}}"
+                                                       Style="{StaticResource BodyText}"
+                                                       VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                            <TextBlock Grid.Column="2"
+                                                       Text="{Binding Trend, Converter={StaticResource TrendConverter}}"
+                                                       Style="{StaticResource SecondaryText}"
+                                                       VerticalAlignment="Center" HorizontalAlignment="Center"
+                                                       FontSize="16"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- Right column: Alerts -->
+                <StackPanel Grid.Column="1">
+                    <TextBlock Text="Alertas" Style="{StaticResource H3}" Margin="0,0,0,12"/>
+
+                    <TextBlock Text="Tudo certo. Nenhum alerta.">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource SecondaryText}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Alerts.Count}" Value="0">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+
+                    <ItemsControl ItemsSource="{Binding Alerts}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{StaticResource SurfaceBrush}"
+                                        BorderBrush="{StaticResource BorderBrush}"
+                                        BorderThickness="1" CornerRadius="6"
+                                        Padding="12" Margin="0,0,0,8">
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Title}" Style="{StaticResource BodyText}"
+                                                   FontWeight="SemiBold" Margin="0,0,0,4"/>
+                                        <TextBlock Text="{Binding Message}" Style="{StaticResource SecondaryText}"
+                                                   TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Grid>
+
+            <!-- ═══════════════════════════════════════════════════ -->
+            <!-- CALENDAR — full width, below the two-column section -->
+            <!-- ═══════════════════════════════════════════════════ -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <!-- Header -->
+                    <Grid Margin="0,0,0,12">
+                        <TextBlock Text="{Binding CalendarTitle}" Style="{StaticResource H3}"/>
+                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" VerticalAlignment="Center"
+                                    Visibility="{Binding ActiveCycleFocus, Converter={StaticResource NullToVisibilityConverter}}">
+                            <Rectangle Fill="{StaticResource AccentBrush}" Opacity="0.7"
+                                       Width="10" Height="3" RadiusX="1" RadiusY="1" Margin="0,0,5,0"/>
+                            <TextBlock Text="Ciclo ativo" Style="{StaticResource SecondaryText}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Day-of-week headers -->
+                    <UniformGrid Columns="7" Margin="0,0,0,4">
+                        <TextBlock Text="Dom" Style="{StaticResource SecondaryText}" HorizontalAlignment="Center" FontSize="11"/>
+                        <TextBlock Text="Seg" Style="{StaticResource SecondaryText}" HorizontalAlignment="Center" FontSize="11"/>
+                        <TextBlock Text="Ter" Style="{StaticResource SecondaryText}" HorizontalAlignment="Center" FontSize="11"/>
+                        <TextBlock Text="Qua" Style="{StaticResource SecondaryText}" HorizontalAlignment="Center" FontSize="11"/>
+                        <TextBlock Text="Qui" Style="{StaticResource SecondaryText}" HorizontalAlignment="Center" FontSize="11"/>
+                        <TextBlock Text="Sex" Style="{StaticResource SecondaryText}" HorizontalAlignment="Center" FontSize="11"/>
+                        <TextBlock Text="Sáb" Style="{StaticResource SecondaryText}" HorizontalAlignment="Center" FontSize="11"/>
+                    </UniformGrid>
+
+                    <!-- Day cells -->
+                    <ItemsControl ItemsSource="{Binding CalendarDays}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="7"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="2" Height="48">
+                                    <!-- Energy tinted background -->
+                                    <Border CornerRadius="5"
+                                            Background="{Binding Energy, Converter={StaticResource EnergyColorConverter}}">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Opacity" Value="1"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsCurrentMonth}" Value="False">
+                                                        <Setter Property="Opacity" Value="0.35"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                    </Border>
+                                    <!-- Today ring -->
+                                    <Border CornerRadius="5" BorderThickness="2"
+                                            BorderBrush="{StaticResource PrimaryBrush}">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsToday}" Value="True">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                    </Border>
+                                    <!-- Cycle strip at top -->
+                                    <Rectangle Fill="{StaticResource AccentBrush}" Opacity="0.6"
+                                               Height="3" VerticalAlignment="Top"
+                                               Margin="4,3,4,0" RadiusX="1" RadiusY="1">
+                                        <Rectangle.Style>
+                                            <Style TargetType="Rectangle">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsInCycle}" Value="True">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Rectangle.Style>
+                                    </Rectangle>
+                                    <!-- Day number -->
+                                    <TextBlock Text="{Binding Date.Day}"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="12">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock" BasedOn="{StaticResource SecondaryText}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsCurrentMonth}" Value="True">
+                                                        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsToday}" Value="True">
+                                                        <Setter Property="FontWeight" Value="Bold"/>
+                                                        <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <!-- Legend -->
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0" HorizontalAlignment="Right">
+                        <Border Width="10" Height="10" CornerRadius="2" Margin="0,0,4,0" Background="#5AA3BE8C"/>
+                        <TextBlock Text="Energia alta" Style="{StaticResource SecondaryText}" Margin="0,0,10,0" FontSize="11"/>
+                        <Border Width="10" Height="10" CornerRadius="2" Margin="0,0,4,0" Background="#467C9EBD"/>
+                        <TextBlock Text="Média" Style="{StaticResource SecondaryText}" Margin="0,0,10,0" FontSize="11"/>
+                        <Border Width="10" Height="10" CornerRadius="2" Margin="0,0,4,0" Background="#46EBCB8B"/>
+                        <TextBlock Text="Baixa" Style="{StaticResource SecondaryText}" Margin="0,0,10,0" FontSize="11"/>
+                        <Border Width="10" Height="10" CornerRadius="2" Margin="0,0,4,0" Background="#50BF616A"/>
+                        <TextBlock Text="Muito baixa" Style="{StaticResource SecondaryText}" FontSize="11"/>
                     </StackPanel>
-                </Border>
-            </StackPanel>
+                </StackPanel>
+            </Border>
 
-            <!-- Right column: Alerts -->
-            <StackPanel Grid.Column="1">
-                <TextBlock Text="Alerts" Style="{StaticResource H3}" Margin="0,0,0,12"/>
-
-                <!-- No alerts (shown when Alerts list is empty) -->
-                <TextBlock Text="All clear. No alerts.">
-                    <TextBlock.Style>
-                        <Style TargetType="TextBlock" BasedOn="{StaticResource SecondaryText}">
-                            <Setter Property="Visibility" Value="Collapsed"/>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Alerts.Count}" Value="0">
-                                    <Setter Property="Visibility" Value="Visible"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
-
-                <ItemsControl ItemsSource="{Binding Alerts}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border Background="{StaticResource SurfaceBrush}"
-                                    BorderBrush="{StaticResource BorderBrush}"
-                                    BorderThickness="1" CornerRadius="6"
-                                    Padding="12" Margin="0,0,0,8">
-                                <StackPanel>
-                                    <TextBlock Text="{Binding Title}" Style="{StaticResource BodyText}"
-                                               FontWeight="SemiBold" Margin="0,0,0,4"/>
-                                    <TextBlock Text="{Binding Message}" Style="{StaticResource SecondaryText}"
-                                               TextWrapping="Wrap"/>
-                                </StackPanel>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </StackPanel>
-        </Grid>
+        </StackPanel>
     </ScrollViewer>
 </UserControl>
