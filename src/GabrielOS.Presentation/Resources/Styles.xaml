@@ -100,6 +100,14 @@
         </Setter>
     </Style>
 
+    <!-- Global Converters (must be declared before any style that uses them) -->
+    <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    <conv:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+    <conv:InverseToVisibilityConverter x:Key="InverseToVisibilityConverter"/>
+    <conv:IsActiveSectionConverter x:Key="IsActiveSectionConverter"/>
+    <conv:NullableScoreConverter x:Key="NullableScoreConverter"/>
+    <conv:NullableIntToDoubleConverter x:Key="NullableIntToDoubleConverter"/>
+
     <!-- Sidebar Button (with active-section highlight) -->
     <Style x:Key="SidebarButton" TargetType="Button">
         <Setter Property="Background" Value="Transparent"/>
@@ -151,14 +159,6 @@
             </Setter.Value>
         </Setter>
     </Style>
-
-    <!-- Global Converters (declared here so views don't need per-file conv xmlns) -->
-    <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
-    <conv:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
-    <conv:InverseToVisibilityConverter x:Key="InverseToVisibilityConverter"/>
-    <conv:IsActiveSectionConverter x:Key="IsActiveSectionConverter"/>
-    <conv:NullableScoreConverter x:Key="NullableScoreConverter"/>
-    <conv:NullableIntToDoubleConverter x:Key="NullableIntToDoubleConverter"/>
 
     <!-- Empty State -->
     <Style x:Key="EmptyState" TargetType="StackPanel">
