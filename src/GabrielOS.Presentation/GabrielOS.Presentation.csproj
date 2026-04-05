@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>GabrielOS.Presentation</RootNamespace>
-    <ApplicationIcon />
+    <ApplicationIcon>Assets\icon_gabriel_os.ico</ApplicationIcon>
     <StartupObject>GabrielOS.Presentation.App</StartupObject>
   </PropertyGroup>
   <ItemGroup>
@@ -14,7 +14,12 @@
     <ProjectReference Include="..\GabrielOS.Infrastructure\GabrielOS.Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Assets\icon_gabriel_os.ico" />
+    <Resource Include="Themes\Fonts\**\*.ttf" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
+    <PackageReference Include="MahApps.Metro.IconPacks" Version="6.2.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>

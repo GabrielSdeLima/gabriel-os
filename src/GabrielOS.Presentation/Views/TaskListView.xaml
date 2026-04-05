@@ -67,7 +67,7 @@
                                 <StackPanel>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="{Binding Status}" Style="{StaticResource SecondaryText}"
-                                                   Foreground="{StaticResource PrimaryBrush}" FontWeight="SemiBold"/>
+                                                   Foreground="{DynamicResource AccentPrimaryBrush}" FontWeight="SemiBold"/>
                                         <TextBlock Text=" · " Style="{StaticResource SecondaryText}"
                                                    Visibility="{Binding Priority, Converter={StaticResource NullToVisibilityConverter}}"/>
                                         <TextBlock Text="{Binding Priority}" Style="{StaticResource SecondaryText}"
@@ -75,11 +75,11 @@
                                         <TextBlock Text=" · " Style="{StaticResource SecondaryText}"
                                                    Visibility="{Binding Goal, Converter={StaticResource NullToVisibilityConverter}}"/>
                                         <TextBlock Text="{Binding Goal.Title}" Style="{StaticResource SecondaryText}"
-                                                   Foreground="{StaticResource AccentBrush}" MaxWidth="200"
+                                                   Foreground="{DynamicResource AccentCoolBrush}" MaxWidth="200"
                                                    TextTrimming="CharacterEllipsis"
                                                    Visibility="{Binding Goal, Converter={StaticResource NullToVisibilityConverter}}"/>
                                         <TextBlock Text=" ★" Style="{StaticResource SecondaryText}"
-                                                   Foreground="{StaticResource WarningBrush}"
+                                                   Foreground="{DynamicResource SemanticWarningBrush}"
                                                    Visibility="{Binding IsNextAction, Converter={StaticResource BoolToVisibilityConverter}}"/>
                                     </StackPanel>
                                     <TextBlock Text="{Binding Title}" Style="{StaticResource BodyText}"
@@ -103,7 +103,7 @@
                 </ItemsControl>
                 <StackPanel Style="{StaticResource EmptyState}"
                             Visibility="{Binding Tasks.Count, Converter={StaticResource InverseToVisibilityConverter}}">
-                    <TextBlock Text="▷" FontSize="32" Foreground="{StaticResource TextSecondaryBrush}"
+                    <TextBlock Text="▷" FontSize="32" Foreground="{DynamicResource TextSecondaryBrush}"
                                HorizontalAlignment="Center" Margin="0,0,0,8"/>
                     <TextBlock Text="No tasks yet" Style="{StaticResource H3}"
                                HorizontalAlignment="Center" Margin="0,0,0,4"/>

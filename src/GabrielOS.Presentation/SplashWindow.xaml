@@ -4,8 +4,9 @@
         WindowStyle="None" ResizeMode="NoResize"
         Width="420" Height="260"
         WindowStartupLocation="CenterScreen"
-        Background="#16161E"
-        AllowsTransparency="False">
+        Background="{DynamicResource BackgroundPrimaryBrush}"
+        AllowsTransparency="False"
+        ShowInTaskbar="False">
 
     <Window.Triggers>
         <EventTrigger RoutedEvent="Window.Loaded">
@@ -51,7 +52,7 @@
     <Grid>
         <!-- Border accent line at top -->
         <Border Height="3" VerticalAlignment="Top" HorizontalAlignment="Stretch"
-                Background="#7C9EBD"/>
+                Background="{DynamicResource AccentPrimaryBrush}"/>
 
         <!-- Main content -->
         <StackPanel x:Name="ContentPanel" Opacity="0"
@@ -61,30 +62,34 @@
             </StackPanel.RenderTransform>
 
             <!-- Logo -->
+            <Image Source="Assets/icon_gabriel_os.ico" Width="72" Height="72"
+                   HorizontalAlignment="Center" Margin="0,0,0,16"
+                   RenderOptions.BitmapScalingMode="HighQuality"
+                   SnapsToDevicePixels="True"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <TextBlock Text="GABRIEL"
-                           FontFamily="Segoe UI" FontSize="44" FontWeight="Light"
-                           Foreground="#D8DEE9"/>
+                           FontFamily="Segoe UI" FontSize="36" FontWeight="Light"
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
                 <TextBlock Text="OS"
-                           FontFamily="Segoe UI" FontSize="44" FontWeight="SemiBold"
-                           Foreground="#7C9EBD" Margin="6,0,0,0"/>
+                           FontFamily="Segoe UI" FontSize="36" FontWeight="SemiBold"
+                           Foreground="{DynamicResource AccentPrimaryBrush}" Margin="6,0,0,0"/>
             </StackPanel>
 
             <!-- Subtitle -->
             <TextBlock x:Name="SubtitleText" Opacity="0"
                        Text="Life Operating System"
                        FontFamily="Segoe UI" FontSize="13" FontWeight="Normal"
-                       Foreground="#808A9F" HorizontalAlignment="Center"
+                       Foreground="{DynamicResource TextSecondaryBrush}" HorizontalAlignment="Center"
                        Margin="0,10,0,0"/>
         </StackPanel>
 
         <!-- Bottom hint -->
         <StackPanel x:Name="BottomLine" Opacity="0"
                     VerticalAlignment="Bottom" Margin="0,0,0,24">
-            <Border Height="1" Background="#3B3B50" Margin="40,0,40,16"/>
+            <Border Height="1" Background="{DynamicResource BorderDefaultBrush}" Margin="40,0,40,16"/>
             <TextBlock Text="loading…"
                        FontFamily="Segoe UI" FontSize="11"
-                       Foreground="#3B3B50" HorizontalAlignment="Center"/>
+                       Foreground="{DynamicResource BorderDefaultBrush}" HorizontalAlignment="Center"/>
         </StackPanel>
     </Grid>
 </Window>

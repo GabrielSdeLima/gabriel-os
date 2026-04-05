@@ -34,21 +34,21 @@
                         <Grid>
                             <StackPanel>
                                 <TextBlock Text="✓ Check-in feito!" Style="{StaticResource H3}"
-                                           Foreground="{StaticResource AccentBrush}" Margin="0,0,0,4"/>
+                                           Foreground="{DynamicResource AccentCoolBrush}" Margin="0,0,0,4"/>
                                 <TextBlock Text="{Binding SuggestedModeText}" Style="{StaticResource BodyText}"
                                            TextWrapping="Wrap"/>
                                 <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                                     <TextBlock Style="{StaticResource SecondaryText}" Margin="0,0,12,0">
                                         <Run Text="E "/>
-                                        <Run Text="{Binding Energy}" Foreground="{StaticResource PrimaryBrush}" FontWeight="SemiBold"/>
+                                        <Run Text="{Binding Energy}" Foreground="{DynamicResource AccentPrimaryBrush}" FontWeight="SemiBold"/>
                                     </TextBlock>
                                     <TextBlock Style="{StaticResource SecondaryText}" Margin="0,0,12,0">
                                         <Run Text="M "/>
-                                        <Run Text="{Binding Mood}" Foreground="{StaticResource PrimaryBrush}" FontWeight="SemiBold"/>
+                                        <Run Text="{Binding Mood}" Foreground="{DynamicResource AccentPrimaryBrush}" FontWeight="SemiBold"/>
                                     </TextBlock>
                                     <TextBlock Style="{StaticResource SecondaryText}" Margin="0,0,12,0">
                                         <Run Text="C "/>
-                                        <Run Text="{Binding Clarity}" Foreground="{StaticResource PrimaryBrush}" FontWeight="SemiBold"/>
+                                        <Run Text="{Binding Clarity}" Foreground="{DynamicResource AccentPrimaryBrush}" FontWeight="SemiBold"/>
                                     </TextBlock>
                                     <TextBlock Style="{StaticResource SecondaryText}">
                                         <Run Text="T "/>
@@ -127,7 +127,7 @@
                                 <Grid>
                                     <TextBlock Text="Energia" Style="{StaticResource BodyText}"/>
                                     <TextBlock Text="{Binding Energy}" Style="{StaticResource BodyText}"
-                                               HorizontalAlignment="Right" Foreground="{StaticResource PrimaryBrush}"/>
+                                               HorizontalAlignment="Right" Foreground="{DynamicResource AccentPrimaryBrush}"/>
                                 </Grid>
                                 <Slider Value="{Binding Energy}" Minimum="1" Maximum="10"
                                         TickFrequency="1" IsSnapToTickEnabled="True" Margin="0,4,0,0"/>
@@ -137,7 +137,7 @@
                                 <Grid>
                                     <TextBlock Text="Humor" Style="{StaticResource BodyText}"/>
                                     <TextBlock Text="{Binding Mood}" Style="{StaticResource BodyText}"
-                                               HorizontalAlignment="Right" Foreground="{StaticResource PrimaryBrush}"/>
+                                               HorizontalAlignment="Right" Foreground="{DynamicResource AccentPrimaryBrush}"/>
                                 </Grid>
                                 <Slider Value="{Binding Mood}" Minimum="1" Maximum="10"
                                         TickFrequency="1" IsSnapToTickEnabled="True" Margin="0,4,0,0"/>
@@ -147,7 +147,7 @@
                                 <Grid>
                                     <TextBlock Text="Clareza" Style="{StaticResource BodyText}"/>
                                     <TextBlock Text="{Binding Clarity}" Style="{StaticResource BodyText}"
-                                               HorizontalAlignment="Right" Foreground="{StaticResource PrimaryBrush}"/>
+                                               HorizontalAlignment="Right" Foreground="{DynamicResource AccentPrimaryBrush}"/>
                                 </Grid>
                                 <Slider Value="{Binding Clarity}" Minimum="1" Maximum="10"
                                         TickFrequency="1" IsSnapToTickEnabled="True" Margin="0,4,0,0"/>
@@ -192,7 +192,7 @@
                     <Border Background="#3D1A1A" CornerRadius="4" Padding="8,6" Margin="0,0,0,8"
                             Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}">
                         <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource BodyText}"
-                                   Foreground="{StaticResource DangerBrush}" TextWrapping="Wrap"/>
+                                   Foreground="{DynamicResource SemanticErrorBrush}" TextWrapping="Wrap"/>
                     </Border>
 
                     <!-- Save -->
@@ -239,17 +239,17 @@
                     <Grid Margin="0,2,0,2">
                         <TextBlock Text="Energia" Style="{StaticResource SecondaryText}"/>
                         <TextBlock Text="{Binding SelectedHistoryCheckIn.Energy}" Style="{StaticResource BodyText}"
-                                   HorizontalAlignment="Right" Foreground="{StaticResource PrimaryBrush}"/>
+                                   HorizontalAlignment="Right" Foreground="{DynamicResource AccentPrimaryBrush}"/>
                     </Grid>
                     <Grid Margin="0,2,0,2">
                         <TextBlock Text="Humor" Style="{StaticResource SecondaryText}"/>
                         <TextBlock Text="{Binding SelectedHistoryCheckIn.Mood}" Style="{StaticResource BodyText}"
-                                   HorizontalAlignment="Right" Foreground="{StaticResource PrimaryBrush}"/>
+                                   HorizontalAlignment="Right" Foreground="{DynamicResource AccentPrimaryBrush}"/>
                     </Grid>
                     <Grid Margin="0,2,0,2">
                         <TextBlock Text="Clareza" Style="{StaticResource SecondaryText}"/>
                         <TextBlock Text="{Binding SelectedHistoryCheckIn.Clarity}" Style="{StaticResource BodyText}"
-                                   HorizontalAlignment="Right" Foreground="{StaticResource PrimaryBrush}"/>
+                                   HorizontalAlignment="Right" Foreground="{DynamicResource AccentPrimaryBrush}"/>
                     </Grid>
                     <Grid Margin="0,2,0,6">
                         <TextBlock Text="Tensão" Style="{StaticResource SecondaryText}"/>
@@ -301,13 +301,13 @@
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource SecondaryText}">
-                                            <Run Text="E"/><Run Text="{Binding Energy}" Foreground="{StaticResource PrimaryBrush}"/>
+                                            <Run Text="E"/><Run Text="{Binding Energy}" Foreground="{DynamicResource AccentPrimaryBrush}"/>
                                         </TextBlock>
                                         <TextBlock Grid.Row="0" Grid.Column="1" Style="{StaticResource SecondaryText}">
-                                            <Run Text="M"/><Run Text="{Binding Mood}" Foreground="{StaticResource PrimaryBrush}"/>
+                                            <Run Text="M"/><Run Text="{Binding Mood}" Foreground="{DynamicResource AccentPrimaryBrush}"/>
                                         </TextBlock>
                                         <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource SecondaryText}">
-                                            <Run Text="C"/><Run Text="{Binding Clarity}" Foreground="{StaticResource PrimaryBrush}"/>
+                                            <Run Text="C"/><Run Text="{Binding Clarity}" Foreground="{DynamicResource AccentPrimaryBrush}"/>
                                         </TextBlock>
                                         <TextBlock Grid.Row="1" Grid.Column="1" Style="{StaticResource SecondaryText}">
                                             <Run Text="T"/>

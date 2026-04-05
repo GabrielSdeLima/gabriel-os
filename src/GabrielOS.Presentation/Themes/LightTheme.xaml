@@ -1,0 +1,38 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- ═══ "Morning Fog" Light Theme ═══ -->
+
+    <!-- Backgrounds -->
+    <SolidColorBrush x:Key="BackgroundPrimaryBrush"   Color="#FAFAF8"/>
+    <SolidColorBrush x:Key="BackgroundSecondaryBrush"  Color="#F0EFEB"/>
+    <SolidColorBrush x:Key="BackgroundTertiaryBrush"   Color="#E8E6E0"/>
+    <SolidColorBrush x:Key="BackgroundElevatedBrush"   Color="#FFFFFF"/>
+
+    <!-- Text -->
+    <SolidColorBrush x:Key="TextPrimaryBrush"     Color="#1A1A1A"/>
+    <SolidColorBrush x:Key="TextSecondaryBrush"    Color="#6B6860"/>
+    <SolidColorBrush x:Key="TextTertiaryBrush"     Color="#9C9890"/>
+    <SolidColorBrush x:Key="TextInverseBrush"      Color="#FAFAF8"/>
+
+    <!-- Accent -->
+    <SolidColorBrush x:Key="AccentPrimaryBrush"        Color="#7C6F64"/>
+    <SolidColorBrush x:Key="AccentPrimaryHoverBrush"    Color="#6A5D52"/>
+    <SolidColorBrush x:Key="AccentPrimaryPressedBrush"  Color="#584E44"/>
+    <SolidColorBrush x:Key="AccentSubtleBrush"          Color="#E8E2DC"/>
+    <SolidColorBrush x:Key="AccentSecondaryBrush"       Color="#B8A9A0"/>
+    <SolidColorBrush x:Key="AccentWarmBrush"            Color="#D4A98C"/>
+    <SolidColorBrush x:Key="AccentCoolBrush"            Color="#8BA4A8"/>
+
+    <!-- Semantic -->
+    <SolidColorBrush x:Key="SemanticSuccessBrush"  Color="#7A9E7E"/>
+    <SolidColorBrush x:Key="SemanticWarningBrush"  Color="#C4A265"/>
+    <SolidColorBrush x:Key="SemanticErrorBrush"    Color="#B5706A"/>
+    <SolidColorBrush x:Key="SemanticInfoBrush"     Color="#7E95A8"/>
+
+    <!-- Borders -->
+    <SolidColorBrush x:Key="BorderDefaultBrush"   Color="#DDD9D3"/>
+    <SolidColorBrush x:Key="BorderFocusedBrush"    Color="#7C6F64"/>
+    <SolidColorBrush x:Key="BorderSubtleBrush"     Color="#ECEAE6"/>
+
+</ResourceDictionary>

@@ -99,13 +99,13 @@
                                         <StackPanel Orientation="Horizontal">
                                             <TextBlock Text="{Binding EntryType}"
                                                        Style="{StaticResource SecondaryText}"
-                                                       Foreground="{StaticResource PrimaryBrush}"
+                                                       Foreground="{DynamicResource AccentPrimaryBrush}"
                                                        FontWeight="SemiBold"/>
                                             <TextBlock Text=" · " Style="{StaticResource SecondaryText}"/>
                                             <TextBlock Text="{Binding CreatedAt, StringFormat='{}{0:dd MMM yyyy HH:mm}'}"
                                                        Style="{StaticResource SecondaryText}"/>
                                             <TextBlock Text=" · 🔒" Style="{StaticResource SecondaryText}"
-                                                       Foreground="{StaticResource WarningBrush}"
+                                                       Foreground="{DynamicResource SemanticWarningBrush}"
                                                        Visibility="{Binding IsSensitive, Converter={StaticResource BoolToVisibilityConverter}}"/>
                                         </StackPanel>
 
@@ -141,7 +141,7 @@
                 </ItemsControl>
                 <StackPanel Style="{StaticResource EmptyState}"
                             Visibility="{Binding Entries.Count, Converter={StaticResource InverseToVisibilityConverter}}">
-                    <TextBlock Text="◇" FontSize="32" Foreground="{StaticResource TextSecondaryBrush}"
+                    <TextBlock Text="◇" FontSize="32" Foreground="{DynamicResource TextSecondaryBrush}"
                                HorizontalAlignment="Center" Margin="0,0,0,8"/>
                     <TextBlock Text="No journal entries yet" Style="{StaticResource H3}"
                                HorizontalAlignment="Center" Margin="0,0,0,4"/>

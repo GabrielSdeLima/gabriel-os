@@ -30,7 +30,7 @@
                 <Border Background="#3D1A1A" CornerRadius="4" Padding="8,6" Margin="0,0,0,8"
                         Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}">
                     <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource BodyText}"
-                               Foreground="{StaticResource DangerBrush}" TextWrapping="Wrap"/>
+                               Foreground="{DynamicResource SemanticErrorBrush}" TextWrapping="Wrap"/>
                 </Border>
 
                 <TextBox Text="{Binding NewTitle, UpdateSourceTrigger=PropertyChanged}"
@@ -96,14 +96,14 @@
                                     <Grid>
                                         <StackPanel Orientation="Horizontal">
                                             <TextBlock Text="{Binding Priority}" Style="{StaticResource SecondaryText}"
-                                                       Foreground="{StaticResource PrimaryBrush}" FontWeight="SemiBold"/>
+                                                       Foreground="{DynamicResource AccentPrimaryBrush}" FontWeight="SemiBold"/>
                                             <TextBlock Text=" · " Style="{StaticResource SecondaryText}"/>
                                             <TextBlock Text="{Binding Status}" Style="{StaticResource SecondaryText}"/>
                                             <TextBlock Text=" · " Style="{StaticResource SecondaryText}"/>
                                             <TextBlock Text="{Binding HorizonType}" Style="{StaticResource SecondaryText}"/>
                                             <TextBlock Text=" · " Style="{StaticResource SecondaryText}"/>
                                             <TextBlock Text="{Binding Pillar.Name}" Style="{StaticResource SecondaryText}"
-                                                       Foreground="{StaticResource AccentBrush}"/>
+                                                       Foreground="{DynamicResource AccentCoolBrush}"/>
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                                             <Button Content="Edit" Style="{StaticResource SecondaryButton}"
@@ -133,7 +133,7 @@
                 </ItemsControl>
                     <StackPanel Style="{StaticResource EmptyState}"
                                 Visibility="{Binding Goals.Count, Converter={StaticResource InverseToVisibilityConverter}}">
-                        <TextBlock Text="◈" FontSize="32" Foreground="{StaticResource TextSecondaryBrush}"
+                        <TextBlock Text="◈" FontSize="32" Foreground="{DynamicResource TextSecondaryBrush}"
                                    HorizontalAlignment="Center" Margin="0,0,0,8"/>
                         <TextBlock Text="No goals yet" Style="{StaticResource H3}"
                                    HorizontalAlignment="Center" Margin="0,0,0,4"/>

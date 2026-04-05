@@ -11,6 +11,37 @@
         <StackPanel MaxWidth="600">
             <TextBlock Text="Settings" Style="{StaticResource H1}" Margin="0,0,0,24"/>
 
+            <!-- Appearance -->
+            <Border Style="{StaticResource Card}">
+                <Grid>
+                    <StackPanel>
+                        <TextBlock Text="Appearance" Style="{StaticResource H3}" Margin="0,0,0,6"/>
+                        <TextBlock Style="{StaticResource SecondaryText}">
+                            Switch between light and dark themes.
+                        </TextBlock>
+                    </StackPanel>
+                    <Button HorizontalAlignment="Right" VerticalAlignment="Center"
+                            Style="{StaticResource SecondaryButton}"
+                            Command="{Binding ToggleThemeCommand}"
+                            Padding="12,6">
+                        <Button.Content>
+                            <TextBlock FontSize="14">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Text" Value="Switch to Light"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsDarkTheme}" Value="False">
+                                                <Setter Property="Text" Value="Switch to Dark"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Button.Content>
+                    </Button>
+                </Grid>
+            </Border>
+
             <!-- AI Configuration -->
             <Border Style="{StaticResource Card}">
                 <StackPanel>
@@ -22,11 +53,7 @@
                     <TextBlock Text="Anthropic API Key" Style="{StaticResource BodyText}" Margin="0,0,0,6"/>
                     <PasswordBox x:Name="ApiKeyBox"
                                  Margin="0,0,0,12"
-                                 FontFamily="Consolas" FontSize="13"
-                                 Background="{StaticResource SurfaceBrush}"
-                                 Foreground="{StaticResource TextPrimaryBrush}"
-                                 BorderBrush="{StaticResource BorderBrush}"
-                                 Padding="10,8"
+                                 Style="{StaticResource DarkPasswordBox}"
                                  PasswordChanged="ApiKeyBox_PasswordChanged"/>
 
                     <TextBlock Text="Model" Style="{StaticResource BodyText}" Margin="0,0,0,6"/>
@@ -42,11 +69,11 @@
                                 Command="{Binding ClearCommand}"/>
                     </StackPanel>
 
-                    <Border Background="{StaticResource SurfaceBrush}" CornerRadius="4" Padding="10,8"
+                    <Border Background="{DynamicResource BackgroundSecondaryBrush}" CornerRadius="4" Padding="10,8"
                             Margin="0,12,0,0"
                             Visibility="{Binding IsSaved, Converter={StaticResource BoolToVisibilityConverter}}">
                         <TextBlock Text="✓ Settings saved" Style="{StaticResource BodyText}"
-                                   Foreground="{StaticResource AccentBrush}"/>
+                                   Foreground="{DynamicResource AccentCoolBrush}"/>
                     </Border>
                 </StackPanel>
             </Border>

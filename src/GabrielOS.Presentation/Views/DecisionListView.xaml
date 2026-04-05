@@ -90,14 +90,14 @@
                                     <Grid>
                                         <StackPanel Orientation="Horizontal">
                                             <TextBlock Text="{Binding Status}" Style="{StaticResource SecondaryText}"
-                                                       Foreground="{StaticResource PrimaryBrush}" FontWeight="SemiBold"/>
+                                                       Foreground="{DynamicResource AccentPrimaryBrush}" FontWeight="SemiBold"/>
                                             <TextBlock Text=" · " Style="{StaticResource SecondaryText}"/>
                                             <TextBlock Text="{Binding CreatedAt, StringFormat='{}{0:dd MMM yyyy}'}"
                                                        Style="{StaticResource SecondaryText}"/>
                                             <TextBlock Text=" · " Style="{StaticResource SecondaryText}"
                                                        Visibility="{Binding Pillar, Converter={StaticResource NullToVisibilityConverter}}"/>
                                             <TextBlock Text="{Binding Pillar.Name}" Style="{StaticResource SecondaryText}"
-                                                       Foreground="{StaticResource AccentBrush}"
+                                                       Foreground="{DynamicResource AccentCoolBrush}"
                                                        Visibility="{Binding Pillar, Converter={StaticResource NullToVisibilityConverter}}"/>
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
@@ -127,7 +127,7 @@
                 </ItemsControl>
                     <StackPanel Style="{StaticResource EmptyState}"
                                 Visibility="{Binding Decisions.Count, Converter={StaticResource InverseToVisibilityConverter}}">
-                        <TextBlock Text="△" FontSize="32" Foreground="{StaticResource TextSecondaryBrush}"
+                        <TextBlock Text="△" FontSize="32" Foreground="{DynamicResource TextSecondaryBrush}"
                                    HorizontalAlignment="Center" Margin="0,0,0,8"/>
                         <TextBlock Text="No decisions logged" Style="{StaticResource H3}"
                                    HorizontalAlignment="Center" Margin="0,0,0,4"/>

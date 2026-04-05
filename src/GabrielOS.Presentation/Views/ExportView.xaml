@@ -52,7 +52,7 @@
             <Border Style="{StaticResource Card}"
                     Visibility="{Binding LastExportMessage, Converter={StaticResource NullToVisibilityConverter}}">
                 <TextBlock Text="{Binding LastExportMessage}" Style="{StaticResource BodyText}"
-                           TextWrapping="Wrap" Foreground="{StaticResource AccentBrush}"/>
+                           TextWrapping="Wrap" Foreground="{DynamicResource AccentCoolBrush}"/>
             </Border>
         </StackPanel>
     </ScrollViewer>

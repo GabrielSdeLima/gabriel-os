@@ -68,7 +68,7 @@
                             <StackPanel>
                                 <Grid>
                                     <TextBlock Text="{Binding Status}" Style="{StaticResource SecondaryText}"
-                                               Foreground="{StaticResource PrimaryBrush}" FontWeight="SemiBold"/>
+                                               Foreground="{DynamicResource AccentPrimaryBrush}" FontWeight="SemiBold"/>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                                         <Button Content="Edit" Style="{StaticResource SecondaryButton}"
                                                 Command="{Binding DataContext.BeginEditPatternCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
@@ -95,7 +95,7 @@
                 </ItemsControl>
                 <StackPanel Style="{StaticResource EmptyState}"
                             Visibility="{Binding Patterns.Count, Converter={StaticResource InverseToVisibilityConverter}}">
-                    <TextBlock Text="⟳" FontSize="32" Foreground="{StaticResource TextSecondaryBrush}"
+                    <TextBlock Text="⟳" FontSize="32" Foreground="{DynamicResource TextSecondaryBrush}"
                                HorizontalAlignment="Center" Margin="0,0,0,8"/>
                     <TextBlock Text="No patterns tracked" Style="{StaticResource H3}"
                                HorizontalAlignment="Center" Margin="0,0,0,4"/>

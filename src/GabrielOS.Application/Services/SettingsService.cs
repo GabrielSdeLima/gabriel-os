@@ -32,6 +32,14 @@ public class SettingsService
         Save();
     }
 
+    public string? GetTheme() => _settings.Theme;
+
+    public void SetTheme(string theme)
+    {
+        _settings.Theme = theme;
+        Save();
+    }
+
     private AppSettings Load()
     {
         try
@@ -53,5 +61,6 @@ public class SettingsService
     {
         public string? AnthropicApiKey { get; set; }
         public string? AIModel { get; set; }
+        public string? Theme { get; set; }
     }
 }

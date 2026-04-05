@@ -9,14 +9,11 @@ using GabrielOS.Domain.Interfaces;
 
 namespace GabrielOS.Presentation.ViewModels;
 
-public class CalendarDay
+public class RecentDay
 {
     public DateTime Date { get; init; }
-    public bool IsCurrentMonth { get; init; }
-    public bool IsToday { get; init; }
-    public bool IsInCycle { get; init; }
     public int? Energy { get; init; }
-    public bool HasCheckIn => Energy.HasValue;
+    public bool IsToday { get; init; }
 }
 
 public partial class DashboardViewModel : ObservableObject
@@ -27,6 +24,7 @@ public partial class DashboardViewModel : ObservableObject
     private readonly GoalService _goalService;
     private readonly AlertService _alertService;
     private readonly CycleFocusService _cycleFocusService;
+    private readonly TaskItemService _taskItemService;
     private readonly IUserRepository _userRepo;
 
     [ObservableProperty] private ObservableCollection<Pillar> _pillars = new();
@@ -37,9 +35,17 @@ public partial class DashboardViewModel : ObservableObject
     [ObservableProperty] private string _suggestedModeText = "Nenhum check-in ainda. Comece seu dia!";
     [ObservableProperty] private int _weeklyJournalCount;
     [ObservableProperty] private bool _isLoading = true;
-    [ObservableProperty] private ObservableCollection<CalendarDay> _calendarDays = new();
-    [ObservableProperty] private string _calendarTitle = string.Empty;
     [ObservableProperty] private bool _hasCheckInToday;
+
+    // Cycle Command Center
+    [ObservableProperty] private ObservableCollection<RecentDay> _recentDays = new();
+    [ObservableProperty] private ObservableCollection<Goal> _cycleGoals = new();
+    [ObservableProperty] private ObservableCollection<TaskItem> _cycleTasks = new();
+    [ObservableProperty] private ObservableCollection<Pillar> _affectedPillars = new();
+    [ObservableProperty] private double _cycleProgressPercent;
+    [ObservableProperty] private int _cycleDaysRemaining;
+    [ObservableProperty] private int _cycleDaysTotal;
+    [ObservableProperty] private bool _hasCycleGoals;
 
     public DashboardViewModel(
         PillarService pillarService,
@@ -48,6 +54,7 @@ public partial class DashboardViewModel : ObservableObject
         GoalService goalService,
         AlertService alertService,
         CycleFocusService cycleFocusService,
+        TaskItemService taskItemService,
         IUserRepository userRepo)
     {
         _pillarService = pillarService;
@@ -56,6 +63,7 @@ public partial class DashboardViewModel : ObservableObject
         _goalService = goalService;
         _alertService = alertService;
         _cycleFocusService = cycleFocusService;
+        _taskItemService = taskItemService;
         _userRepo = userRepo;
 
         _ = LoadAsync();
@@ -65,6 +73,9 @@ public partial class DashboardViewModel : ObservableObject
     private async Task LoadAsync()
     {
         IsLoading = true;
+        IReadOnlyList<CheckIn> recentCheckIns = Array.Empty<CheckIn>();
+        IReadOnlyList<Goal> allGoals = Array.Empty<Goal>();
+        IReadOnlyList<TaskItem> allTasks = Array.Empty<TaskItem>();
         try
         {
             var user = await _userRepo.GetDefaultUserAsync();
@@ -81,9 +92,9 @@ public partial class DashboardViewModel : ObservableObject
 
             WeeklyJournalCount = await _journalService.GetWeeklyCountAsync(user.Id);
 
-            var goals = await _goalService.GetByUserAsync(user.Id);
+            allGoals = await _goalService.GetByUserAsync(user.Id);
             TopGoals = new ObservableCollection<Goal>(
-                goals.Where(g => g.Status == GoalStatus.Active && g.Priority == GoalPriority.P1)
+                allGoals.Where(g => g.Status == GoalStatus.Active && g.Priority == GoalPriority.P1)
                      .Take(3));
 
             ActiveCycleFocus = await _cycleFocusService.GetActiveAsync(user.Id);
@@ -91,44 +102,107 @@ public partial class DashboardViewModel : ObservableObject
             var alerts = await _alertService.GetAlertsAsync(user.Id);
             Alerts = new ObservableCollection<Alert>(alerts.Take(5));
 
-            var recentCheckIns = await _checkInService.GetRecentAsync(user.Id, 60);
-            BuildCalendar(recentCheckIns);
+            recentCheckIns = await _checkInService.GetRecentAsync(user.Id, 14);
+            allTasks = await _taskItemService.GetByUserAsync(user.Id);
         }
-        finally { IsLoading = false; }
+        finally
+        {
+            BuildRecentDays(recentCheckIns);
+            BuildCycleCommandCenter(allGoals, allTasks);
+            IsLoading = false;
+        }
     }
 
-    private void BuildCalendar(IReadOnlyList<CheckIn> checkIns)
+    private void BuildCycleCommandCenter(IReadOnlyList<Goal> allGoals, IReadOnlyList<TaskItem> allTasks)
+    {
+        if (ActiveCycleFocus == null)
+        {
+            CycleGoals = new();
+            CycleTasks = new();
+            AffectedPillars = new();
+            CycleProgressPercent = 0;
+            CycleDaysRemaining = 0;
+            CycleDaysTotal = 0;
+            HasCycleGoals = false;
+            return;
+        }
+
+        // Progress
+        var today = DateTime.Now.Date;
+        var totalDays = (ActiveCycleFocus.EndDate.Date - ActiveCycleFocus.StartDate.Date).Days;
+        var elapsed = (today - ActiveCycleFocus.StartDate.Date).Days;
+        CycleDaysTotal = Math.Max(totalDays, 1);
+        CycleDaysRemaining = Math.Max(0, totalDays - elapsed);
+        CycleProgressPercent = Math.Clamp((double)elapsed / CycleDaysTotal * 100, 0, 100);
+
+        // Goals: prefer linked CycleFocusGoals, fallback to active P1/P2
+        var linkedGoalIds = ActiveCycleFocus.CycleFocusGoals
+            .Select(cfg => cfg.GoalId)
+            .ToHashSet();
+
+        List<Goal> cycleGoals;
+        if (linkedGoalIds.Count > 0)
+        {
+            cycleGoals = allGoals
+                .Where(g => linkedGoalIds.Contains(g.Id))
+                .ToList();
+        }
+        else
+        {
+            cycleGoals = allGoals
+                .Where(g => g.Status == GoalStatus.Active
+                    && (g.Priority == GoalPriority.P1 || g.Priority == GoalPriority.P2))
+                .OrderBy(g => g.Priority)
+                .Take(5)
+                .ToList();
+        }
+
+        CycleGoals = new ObservableCollection<Goal>(cycleGoals);
+        HasCycleGoals = cycleGoals.Count > 0;
+
+        // Tasks: Next/Doing, prefer those linked to cycle goals
+        var cycleGoalIds = cycleGoals.Select(g => g.Id).ToHashSet();
+        var activeTasks = allTasks
+            .Where(t => t.Status == TaskItemStatus.Next || t.Status == TaskItemStatus.Doing)
+            .OrderByDescending(t => cycleGoalIds.Contains(t.GoalId ?? Guid.Empty))
+            .ThenBy(t => t.Status == TaskItemStatus.Doing ? 0 : 1)
+            .ThenBy(t => t.Priority)
+            .Take(8)
+            .ToList();
+
+        CycleTasks = new ObservableCollection<TaskItem>(activeTasks);
+
+        // Affected pillars: unique from cycle goals
+        var affectedPillarIds = cycleGoals
+            .Select(g => g.PillarId)
+            .Distinct()
+            .ToHashSet();
+
+        var affected = Pillars
+            .Where(p => affectedPillarIds.Contains(p.Id))
+            .ToList();
+
+        AffectedPillars = new ObservableCollection<Pillar>(affected);
+    }
+
+    private void BuildRecentDays(IReadOnlyList<CheckIn> checkIns)
     {
         var today = DateTime.Now.Date;
-        var monthStart = new DateTime(today.Year, today.Month, 1);
-        var monthEnd = monthStart.AddMonths(1).AddDays(-1);
-
-        CalendarTitle = monthStart.ToString("MMMM yyyy");
-
         var byDate = checkIns.ToDictionary(c => c.Date.Date);
+        var days = new List<RecentDay>();
 
-        // Pad to the Sunday before the 1st and Saturday after the last day
-        var calStart = monthStart.AddDays(-(int)monthStart.DayOfWeek);
-        var calEnd = monthEnd.AddDays(6 - (int)monthEnd.DayOfWeek);
-
-        var days = new List<CalendarDay>();
-        for (var d = calStart; d <= calEnd; d = d.AddDays(1))
+        for (int i = 13; i >= 0; i--)
         {
-            byDate.TryGetValue(d, out var ci);
-            var isInCycle = ActiveCycleFocus != null
-                && d >= ActiveCycleFocus.StartDate.Date
-                && d <= ActiveCycleFocus.EndDate.Date;
-
-            days.Add(new CalendarDay
+            var date = today.AddDays(-i);
+            byDate.TryGetValue(date, out var ci);
+            days.Add(new RecentDay
             {
-                Date = d,
-                IsCurrentMonth = d.Month == today.Month,
-                IsToday = d == today,
-                IsInCycle = isInCycle,
-                Energy = ci?.Energy
+                Date = date,
+                Energy = ci?.Energy,
+                IsToday = date == today
             });
         }
 
-        CalendarDays = new ObservableCollection<CalendarDay>(days);
+        RecentDays = new ObservableCollection<RecentDay>(days);
     }
 }

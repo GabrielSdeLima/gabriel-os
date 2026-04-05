@@ -45,7 +45,7 @@
                         <StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{Binding EntityType}" Style="{StaticResource SecondaryText}"
-                                           Foreground="{StaticResource PrimaryBrush}" FontWeight="SemiBold"/>
+                                           Foreground="{DynamicResource AccentPrimaryBrush}" FontWeight="SemiBold"/>
                                 <TextBlock Text=" · " Style="{StaticResource SecondaryText}"/>
                                 <TextBlock Text="{Binding Date, StringFormat='{}{0:dd MMM yyyy}'}"
                                            Style="{StaticResource SecondaryText}"/>

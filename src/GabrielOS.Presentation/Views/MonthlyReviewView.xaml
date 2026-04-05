@@ -30,14 +30,14 @@
                     <ComboBox ItemsSource="{Binding YearNumbers}" SelectedItem="{Binding Year}"
                               Style="{StaticResource DarkComboBox}" Width="80" Margin="0,0,12,0"/>
                     <TextBlock Text="{Binding MonthLabel}" Style="{StaticResource H3}"
-                               VerticalAlignment="Center" Foreground="{StaticResource PrimaryBrush}"/>
+                               VerticalAlignment="Center" Foreground="{DynamicResource AccentPrimaryBrush}"/>
                 </StackPanel>
 
                 <!-- Saved confirmation -->
                 <Border Style="{StaticResource Card}"
                         Visibility="{Binding IsSaved, Converter={StaticResource BoolToVisibilityConverter}}">
                     <TextBlock Text="✓ Review saved" Style="{StaticResource BodyText}"
-                               Foreground="{StaticResource AccentBrush}"/>
+                               Foreground="{DynamicResource AccentCoolBrush}"/>
                 </Border>
 
                 <!-- Pillar Scores -->
@@ -52,7 +52,7 @@
                                             <TextBlock Text="{Binding PillarName}" Style="{StaticResource BodyText}"/>
                                             <TextBlock Text="{Binding Score}" Style="{StaticResource BodyText}"
                                                        HorizontalAlignment="Right"
-                                                       Foreground="{StaticResource PrimaryBrush}"/>
+                                                       Foreground="{DynamicResource AccentPrimaryBrush}"/>
                                         </Grid>
                                         <Slider Value="{Binding Score}" Minimum="1" Maximum="10"
                                                 TickFrequency="1" IsSnapToTickEnabled="True" Margin="0,4,0,0"/>
