@@ -19,6 +19,7 @@ public class AppDbContext : DbContext
     public DbSet<Metric> Metrics => Set<Metric>();
     public DbSet<TaskItem> TaskItems => Set<TaskItem>();
     public DbSet<MonthlyReview> MonthlyReviews => Set<MonthlyReview>();
+    public DbSet<CalendarEvent> CalendarEvents => Set<CalendarEvent>();
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 

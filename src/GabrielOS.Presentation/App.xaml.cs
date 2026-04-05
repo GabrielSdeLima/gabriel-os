@@ -8,6 +8,7 @@ using GabrielOS.Infrastructure.Data;
 using GabrielOS.Infrastructure.Repositories;
 using GabrielOS.Infrastructure.Seeding;
 using GabrielOS.Presentation.Navigation;
+using GabrielOS.Presentation.Services;
 using GabrielOS.Presentation.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,6 +36,10 @@ public partial class App : System.Windows.Application
         var services = new ServiceCollection();
         ConfigureServices(services);
         _serviceProvider = services.BuildServiceProvider();
+
+        // Apply saved theme (or default Dark)
+        var themeService = _serviceProvider.GetRequiredService<ThemeService>();
+        themeService.LoadSavedTheme();
 
         await InitializeDatabaseAsync();
 
@@ -69,6 +74,7 @@ public partial class App : System.Windows.Application
         services.AddScoped<IMetricRepository, MetricRepository>();
         services.AddScoped<ITaskItemRepository, TaskItemRepository>();
         services.AddScoped<IMonthlyReviewRepository, MonthlyReviewRepository>();
+        services.AddScoped<ICalendarEventRepository, CalendarEventRepository>();
 
         // Application Services
         services.AddScoped<PillarService>();
@@ -84,10 +90,12 @@ public partial class App : System.Windows.Application
         services.AddScoped<PatternService>();
         services.AddScoped<MetricService>();
         services.AddScoped<MonthlyReviewService>();
+        services.AddScoped<CalendarService>();
         services.AddScoped<AIContextBuilder>();
 
-        // Singleton: settings lives outside DI scope
+        // Singleton: settings and theme live outside DI scope
         services.AddSingleton<SettingsService>();
+        services.AddSingleton<ThemeService>();
 
         // Infrastructure Services
         services.AddScoped<ExportService>();
@@ -113,6 +121,7 @@ public partial class App : System.Windows.Application
         services.AddTransient<MonthlyReviewViewModel>();
         services.AddTransient<PillarTrendViewModel>();
         services.AddTransient<ExportViewModel>();
+        services.AddTransient<CalendarViewModel>();
         services.AddTransient<SettingsViewModel>();
 
         // Windows
@@ -129,10 +138,66 @@ public partial class App : System.Windows.Application
         }
         catch
         {
-            // Fallback for existing databases created without migrations
+            // DB exists but was created without migrations — ensure schema is up to date.
+            // EnsureCreated does nothing if the DB file already exists, so we apply
+            // missing tables via raw SQL for each table the model expects.
             await context.Database.EnsureCreatedAsync();
+            await EnsureMissingTablesAsync(context);
         }
         await DefaultDataSeeder.SeedAsync(context);
+    }
+
+    private static async Task EnsureMissingTablesAsync(AppDbContext context)
+    {
+        // Check for tables added after the initial EnsureCreated and create them if missing.
+        var conn = context.Database.GetDbConnection();
+        await conn.OpenAsync();
+        try
+        {
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT name FROM sqlite_master WHERE type='table' AND name='CalendarEvents'";
+            var exists = await cmd.ExecuteScalarAsync();
+            if (exists == null)
+            {
+                using var create = conn.CreateCommand();
+                create.CommandText = """
+                    CREATE TABLE "CalendarEvents" (
+                        "Id" TEXT NOT NULL CONSTRAINT "PK_CalendarEvents" PRIMARY KEY,
+                        "UserId" TEXT NOT NULL,
+                        "Title" TEXT NOT NULL,
+                        "Description" TEXT,
+                        "EventType" TEXT NOT NULL DEFAULT 'Other',
+                        "Date" TEXT NOT NULL,
+                        "EndDate" TEXT,
+                        "StartTime" TEXT,
+                        "EndTime" TEXT,
+                        "IsAllDay" INTEGER NOT NULL DEFAULT 1,
+                        "Location" TEXT,
+                        "Priority" TEXT,
+                        "IsCompleted" INTEGER NOT NULL DEFAULT 0,
+                        "Notes" TEXT,
+                        "GoalId" TEXT,
+                        "PillarId" TEXT,
+                        "Recurrence" TEXT NOT NULL DEFAULT 'None',
+                        "RecurrenceEndDate" TEXT,
+                        "CreatedAt" TEXT NOT NULL,
+                        "UpdatedAt" TEXT NOT NULL,
+                        CONSTRAINT "FK_CalendarEvents_Goals_GoalId" FOREIGN KEY ("GoalId") REFERENCES "Goals" ("Id"),
+                        CONSTRAINT "FK_CalendarEvents_Pillars_PillarId" FOREIGN KEY ("PillarId") REFERENCES "Pillars" ("Id"),
+                        CONSTRAINT "FK_CalendarEvents_Users_UserId" FOREIGN KEY ("UserId") REFERENCES "Users" ("Id") ON DELETE CASCADE
+                    );
+                    CREATE INDEX "IX_CalendarEvents_UserId_Date" ON "CalendarEvents" ("UserId", "Date");
+                    CREATE INDEX "IX_CalendarEvents_UserId_EventType" ON "CalendarEvents" ("UserId", "EventType");
+                    CREATE INDEX "IX_CalendarEvents_GoalId" ON "CalendarEvents" ("GoalId");
+                    CREATE INDEX "IX_CalendarEvents_PillarId" ON "CalendarEvents" ("PillarId");
+                    """;
+                await create.ExecuteNonQueryAsync();
+            }
+        }
+        finally
+        {
+            await conn.CloseAsync();
+        }
     }
 
     private static string GetDatabasePath()

@@ -74,3 +74,10 @@ public interface IMonthlyReviewRepository : IRepository<MonthlyReview>
     Task<MonthlyReview?> GetByMonthAsync(Guid userId, int year, int month);
     Task<IReadOnlyList<MonthlyReview>> GetRecentAsync(Guid userId, int count);
 }
+
+public interface ICalendarEventRepository : IRepository<CalendarEvent>
+{
+    Task<IReadOnlyList<CalendarEvent>> GetByUserAsync(Guid userId);
+    Task<IReadOnlyList<CalendarEvent>> GetByDateRangeAsync(Guid userId, DateTime start, DateTime end);
+    Task<IReadOnlyList<CalendarEvent>> GetUpcomingAsync(Guid userId, int days = 7);
+}

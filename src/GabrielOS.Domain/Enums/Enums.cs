@@ -88,3 +88,12 @@ public enum TaskItemStatus
     Done,
     Cancelled
 }
+
+public enum CalendarRecurrence
+{
+    None,
+    Daily,
+    Weekly,
+    Monthly,
+    Yearly
+}

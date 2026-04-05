@@ -170,3 +170,20 @@ public class MonthlyReviewConfiguration : IEntityTypeConfiguration<MonthlyReview
         builder.HasOne(e => e.User).WithMany().HasForeignKey(e => e.UserId);
     }
 }
+
+public class CalendarEventConfiguration : IEntityTypeConfiguration<CalendarEvent>
+{
+    public void Configure(EntityTypeBuilder<CalendarEvent> builder)
+    {
+        builder.HasKey(e => e.Id);
+        builder.Property(e => e.Title).IsRequired().HasMaxLength(500);
+        builder.Property(e => e.EventType).IsRequired().HasMaxLength(100);
+        builder.Property(e => e.Recurrence).HasConversion<string>().HasMaxLength(50);
+        builder.Property(e => e.Priority).HasConversion<string>().HasMaxLength(10);
+        builder.HasOne(e => e.User).WithMany(u => u.CalendarEvents).HasForeignKey(e => e.UserId);
+        builder.HasOne(e => e.Goal).WithMany().HasForeignKey(e => e.GoalId).IsRequired(false);
+        builder.HasOne(e => e.Pillar).WithMany().HasForeignKey(e => e.PillarId).IsRequired(false);
+        builder.HasIndex(e => new { e.UserId, e.Date });
+        builder.HasIndex(e => new { e.UserId, e.EventType });
+    }
+}

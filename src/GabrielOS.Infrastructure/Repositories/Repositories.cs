@@ -285,3 +285,43 @@ public class MonthlyReviewRepository : Repository<MonthlyReview>, IMonthlyReview
             .Take(count)
             .ToListAsync();
 }
+
+public class CalendarEventRepository : Repository<CalendarEvent>, ICalendarEventRepository
+{
+    public CalendarEventRepository(AppDbContext context) : base(context) { }
+
+    public async Task<IReadOnlyList<CalendarEvent>> GetByUserAsync(Guid userId)
+    {
+        var list = await _dbSet
+            .Where(e => e.UserId == userId)
+            .Include(e => e.Goal)
+            .Include(e => e.Pillar)
+            .OrderBy(e => e.Date)
+            .ToListAsync();
+        return list.OrderBy(e => e.Date).ThenBy(e => e.StartTime).ToList();
+    }
+
+    public async Task<IReadOnlyList<CalendarEvent>> GetByDateRangeAsync(Guid userId, DateTime start, DateTime end)
+    {
+        var list = await _dbSet
+            .Where(e => e.UserId == userId && e.Date >= start.Date && e.Date <= end.Date)
+            .Include(e => e.Goal)
+            .Include(e => e.Pillar)
+            .OrderBy(e => e.Date)
+            .ToListAsync();
+        return list.OrderBy(e => e.Date).ThenBy(e => e.StartTime).ToList();
+    }
+
+    public async Task<IReadOnlyList<CalendarEvent>> GetUpcomingAsync(Guid userId, int days = 7)
+    {
+        var today = DateTime.UtcNow.Date;
+        var end = today.AddDays(days);
+        var list = await _dbSet
+            .Where(e => e.UserId == userId && !e.IsCompleted && e.Date >= today && e.Date <= end)
+            .Include(e => e.Goal)
+            .Include(e => e.Pillar)
+            .OrderBy(e => e.Date)
+            .ToListAsync();
+        return list.OrderBy(e => e.Date).ThenBy(e => e.StartTime).ToList();
+    }
+}

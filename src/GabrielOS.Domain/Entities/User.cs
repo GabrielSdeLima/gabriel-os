@@ -18,4 +18,5 @@ public class User : BaseEntity
     public ICollection<Pattern> Patterns { get; set; } = new List<Pattern>();
     public ICollection<Metric> Metrics { get; set; } = new List<Metric>();
     public ICollection<TaskItem> Tasks { get; set; } = new List<TaskItem>();
+    public ICollection<CalendarEvent> CalendarEvents { get; set; } = new List<CalendarEvent>();
 }

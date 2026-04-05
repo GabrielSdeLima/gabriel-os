@@ -4,9 +4,12 @@
         xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
         xmlns:vm="clr-namespace:GabrielOS.Presentation.ViewModels"
         xmlns:views="clr-namespace:GabrielOS.Presentation.Views"
+        xmlns:controls="clr-namespace:GabrielOS.Presentation.Controls"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         Title="Gabriel OS" Height="900" Width="1340"
         MinHeight="640" MinWidth="1060"
-        Background="{StaticResource BackgroundBrush}"
+        Icon="pack://application:,,,/Assets/icon_gabriel_os.ico"
+        Background="{DynamicResource BackgroundPrimaryBrush}"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None" ResizeMode="CanResize">
 
@@ -31,14 +34,14 @@
         <DataTemplate DataType="{x:Type vm:PatternListViewModel}"><views:PatternListView /></DataTemplate>
         <DataTemplate DataType="{x:Type vm:MetricListViewModel}"><views:MetricListView /></DataTemplate>
         <DataTemplate DataType="{x:Type vm:PillarTrendViewModel}"><views:PillarTrendView /></DataTemplate>
+        <DataTemplate DataType="{x:Type vm:CalendarViewModel}"><views:CalendarView /></DataTemplate>
         <DataTemplate DataType="{x:Type vm:SearchViewModel}"><views:SearchView /></DataTemplate>
         <DataTemplate DataType="{x:Type vm:ExportViewModel}"><views:ExportView /></DataTemplate>
         <DataTemplate DataType="{x:Type vm:SettingsViewModel}"><views:SettingsView /></DataTemplate>
 
-        <!-- Window control button style -->
         <Style x:Key="WinCtrlButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
             <Setter Property="FontFamily" Value="Segoe UI"/>
             <Setter Property="FontSize" Value="13"/>
             <Setter Property="Width" Value="46"/>
@@ -54,8 +57,8 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="#353548"/>
-                                <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource BackgroundTertiaryBrush}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -64,11 +67,6 @@
         </Style>
 
         <Style x:Key="WinCloseButton" TargetType="Button" BasedOn="{StaticResource WinCtrlButton}">
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Foreground" Value="White"/>
-                </Trigger>
-            </Style.Triggers>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -77,7 +75,7 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="#C0392B"/>
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource SemanticErrorBrush}"/>
                                 <Setter Property="Foreground" Value="White"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
@@ -92,6 +90,7 @@
         <KeyBinding Key="D" Modifiers="Ctrl" Command="{Binding NavigateToDashboardCommand}"/>
         <KeyBinding Key="J" Modifiers="Ctrl" Command="{Binding NavigateToJournalCommand}"/>
         <KeyBinding Key="G" Modifiers="Ctrl" Command="{Binding NavigateToGoalsCommand}"/>
+        <KeyBinding Key="L" Modifiers="Ctrl" Command="{Binding NavigateToCalendarCommand}"/>
         <KeyBinding Key="OemComma" Modifiers="Ctrl" Command="{Binding NavigateToSettingsCommand}"/>
         <KeyBinding Key="Back" Modifiers="Alt" Command="{Binding GoBackCommand}"/>
     </Window.InputBindings>
@@ -102,42 +101,74 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- ══ TITLE BAR (full width, integrated) ══ -->
-        <Grid Grid.Row="0" Background="{StaticResource SidebarBrush}">
+        <!-- ══ TITLE BAR ══ -->
+        <Grid Grid.Row="0" Background="{DynamicResource BackgroundSecondaryBrush}">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="220"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <!-- App branding (aligns with sidebar width) -->
-            <Border Grid.Column="0" BorderBrush="{StaticResource BorderBrush}"
+            <!-- Branding (width animated with sidebar) -->
+            <Border x:Name="TitleBrandingBorder" Grid.Column="0" Width="220"
+                    ClipToBounds="True"
+                    BorderBrush="{DynamicResource BorderDefaultBrush}"
                     BorderThickness="0,0,1,1">
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="16,0">
-                    <Border Width="20" Height="20" CornerRadius="4"
-                            Background="{StaticResource PrimaryBrush}" Margin="0,0,8,0">
-                        <TextBlock Text="G" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold"
-                                   Foreground="{StaticResource SidebarBrush}"
-                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Border>
-                    <TextBlock Text="Gabriel OS" FontFamily="Segoe UI" FontSize="13"
-                               FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}"
-                               VerticalAlignment="Center"/>
-                </StackPanel>
+                <Grid Margin="12,0">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
+                        <Image Source="Assets/icon_gabriel_os.ico" Width="28" Height="28"
+                               Margin="0,0,8,0" RenderOptions.BitmapScalingMode="HighQuality"
+                               SnapsToDevicePixels="True"/>
+                        <TextBlock Text="Gabriel OS" FontFamily="Segoe UI" FontSize="13"
+                                   FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"
+                                   VerticalAlignment="Center"
+                                   Visibility="{Binding IsSidebarCollapsed, Converter={StaticResource InverseToVisibilityConverter}}"/>
+                    </StackPanel>
+                    <!-- Collapse toggle -->
+                    <Button HorizontalAlignment="Right" VerticalAlignment="Center"
+                            Command="{Binding ToggleSidebarCommand}"
+                            shell:WindowChrome.IsHitTestVisibleInChrome="True"
+                            BorderThickness="0" Background="Transparent" Cursor="Hand"
+                            Width="24" Height="24" Padding="0" ToolTip="Toggle sidebar">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="Bd" Background="Transparent" CornerRadius="4">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="Bd" Property="Background" Value="{DynamicResource BackgroundTertiaryBrush}"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                        <TextBlock Foreground="{DynamicResource TextSecondaryBrush}" FontSize="11">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Text" Value="◂"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsSidebarCollapsed}" Value="True">
+                                            <Setter Property="Text" Value="▸"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Button>
+                </Grid>
             </Border>
 
-            <!-- Section breadcrumb + date -->
-            <Border Grid.Column="1" BorderBrush="{StaticResource BorderBrush}"
+            <!-- Breadcrumb + date -->
+            <Border Grid.Column="1" BorderBrush="{DynamicResource BorderDefaultBrush}"
                     BorderThickness="0,0,0,1" Padding="12,0">
                 <Grid>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <!-- Back button -->
                         <Button Command="{Binding GoBackCommand}"
                                 shell:WindowChrome.IsHitTestVisibleInChrome="True"
                                 ToolTip="Voltar (Alt+←)"
                                 Visibility="{Binding CanGoBack, Converter={StaticResource BoolToVisibilityConverter}}"
                                 Margin="0,0,10,0" Padding="4,0" BorderThickness="0"
-                                Background="Transparent" Foreground="{StaticResource TextSecondaryBrush}"
+                                Background="Transparent" Foreground="{DynamicResource TextSecondaryBrush}"
                                 FontFamily="Segoe UI" FontSize="14" Cursor="Hand">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
@@ -146,29 +177,29 @@
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="Bd" Property="Background" Value="#353548"/>
+                                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource BackgroundTertiaryBrush}"/>
                                         </Trigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>
                             </Button.Template>
-                            <TextBlock Text="←" FontSize="14" Foreground="{StaticResource TextSecondaryBrush}"/>
+                            <TextBlock Text="←" FontSize="14" Foreground="{DynamicResource TextSecondaryBrush}"/>
                         </Button>
                         <Border Width="2" Height="14" CornerRadius="1"
-                                Background="{StaticResource PrimaryBrush}" Margin="0,0,8,0"/>
+                                Background="{DynamicResource AccentPrimaryBrush}" Margin="0,0,8,0"/>
                         <TextBlock Text="{Binding CurrentSection}"
                                    FontFamily="Segoe UI" FontSize="13" FontWeight="SemiBold"
-                                   Foreground="{StaticResource TextPrimaryBrush}"
+                                   Foreground="{DynamicResource TextPrimaryBrush}"
                                    VerticalAlignment="Center"/>
                     </StackPanel>
                     <TextBlock Text="{Binding TodayFormatted}"
                                FontFamily="Segoe UI" FontSize="12"
-                               Foreground="{StaticResource TextSecondaryBrush}"
+                               Foreground="{DynamicResource TextSecondaryBrush}"
                                HorizontalAlignment="Right" VerticalAlignment="Center"/>
                 </Grid>
             </Border>
 
             <!-- Window controls -->
-            <Border Grid.Column="2" BorderBrush="{StaticResource BorderBrush}"
+            <Border Grid.Column="2" BorderBrush="{DynamicResource BorderDefaultBrush}"
                     BorderThickness="0,0,0,1">
                 <StackPanel Orientation="Horizontal">
                     <Button x:Name="MinimizeBtn" Content="─" Style="{StaticResource WinCtrlButton}"
@@ -184,23 +215,67 @@
         <!-- ══ MAIN AREA ══ -->
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="220"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Sidebar (no title — moved to title bar) -->
-            <Border Grid.Column="0" Background="{StaticResource SidebarBrush}"
-                    BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,1,0">
+            <!-- Sidebar -->
+            <Border x:Name="SidebarBorder" Grid.Column="0" Width="220"
+                    ClipToBounds="True"
+                    Background="{DynamicResource BackgroundSecondaryBrush}"
+                    BorderBrush="{DynamicResource BorderDefaultBrush}" BorderThickness="0,0,1,0">
                 <DockPanel>
+                    <!-- Footer: theme toggle -->
+                    <Border DockPanel.Dock="Bottom"
+                            BorderBrush="{DynamicResource BorderDefaultBrush}" BorderThickness="0,1,0,0"
+                            Padding="12,8">
+                        <Button Command="{Binding ToggleThemeCommand}"
+                                Style="{StaticResource SecondaryButton}"
+                                HorizontalAlignment="Stretch" Padding="10,7">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <TextBlock FontSize="14">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Text" Value="☀"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsDarkTheme}" Value="True">
+                                                    <Setter Property="Text" Value="🌙"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                                <TextBlock FontSize="13" Margin="7,0,0,0"
+                                           Visibility="{Binding IsSidebarCollapsed, Converter={StaticResource InverseToVisibilityConverter}}">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Text" Value="Light mode"/>
+                                            <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsDarkTheme}" Value="True">
+                                                    <Setter Property="Text" Value="Dark mode"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </StackPanel>
+                        </Button>
+                    </Border>
+
                     <!-- Search hint -->
                     <Border DockPanel.Dock="Top" Margin="12,12,12,8"
-                            Background="{StaticResource SurfaceBrush}"
-                            CornerRadius="4" Padding="8,6" Cursor="Hand">
+                            Background="{DynamicResource BackgroundSecondaryBrush}"
+                            CornerRadius="4" Padding="8,6" Cursor="Hand"
+                            Visibility="{Binding IsSidebarCollapsed, Converter={StaticResource InverseToVisibilityConverter}}">
                         <Border.InputBindings>
                             <MouseBinding MouseAction="LeftClick" Command="{Binding NavigateToSearchCommand}"/>
                         </Border.InputBindings>
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="⌕  Search..." Style="{StaticResource SecondaryText}" FontSize="13"/>
+                            <iconPacks:PackIconLucide Kind="Search" Width="13" Height="13"
+                                                      Foreground="{DynamicResource TextSecondaryBrush}"
+                                                      VerticalAlignment="Center" Margin="0,0,6,0"/>
+                            <TextBlock Text="Search..." Style="{StaticResource SecondaryText}" FontSize="13"/>
                             <TextBlock Text="Ctrl+K" Style="{StaticResource SecondaryText}" FontSize="11"
                                        Margin="8,0,0,0" Opacity="0.5"/>
                         </StackPanel>
@@ -210,41 +285,127 @@
                     <ScrollViewer DockPanel.Dock="Top" VerticalScrollBarVisibility="Auto">
                         <StackPanel>
                             <TextBlock Text="CORE" Style="{StaticResource SecondaryText}" FontSize="10"
-                                       Margin="16,4,16,4" FontWeight="Bold" Opacity="0.5"/>
-                            <Button Tag="Dashboard"     Content="◉  Dashboard"     Style="{StaticResource SidebarButton}" Command="{Binding NavigateToDashboardCommand}"/>
-                            <Button Tag="Check-in"     Content="◎  Check-in"     Style="{StaticResource SidebarButton}" Command="{Binding NavigateToCheckInCommand}"/>
-                            <Button Tag="Journal"      Content="◇  Journal"      Style="{StaticResource SidebarButton}" Command="{Binding NavigateToJournalCommand}"/>
+                                       Margin="16,8,16,4" FontWeight="Bold" Opacity="0.5"
+                                       Visibility="{Binding IsSidebarCollapsed, Converter={StaticResource InverseToVisibilityConverter}}"/>
+                            <Button Tag="Dashboard" Style="{StaticResource SidebarButton}" Command="{Binding NavigateToDashboardCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconLucide Kind="LayoutDashboard" Width="16" Height="16" VerticalAlignment="Center" Margin="2,0"/>
+                                    <TextBlock Text="Dashboard" Margin="10,0,0,0" Visibility="{Binding IsSidebarCollapsed, Converter={StaticResource InverseToVisibilityConverter}}"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Tag="Check-in" Style="{StaticResource SidebarButton}" Command="{Binding NavigateToCheckInCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconLucide Kind="CircleCheckBig" Width="16" Height="16" VerticalAlignment="Center" Margin="2,0"/>
+                                    <TextBlock Text="Check-in" Margin="10,0,0,0" Visibility="{Binding IsSidebarCollapsed, Converter={StaticResource InverseToVisibilityConverter}}"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Tag="Journal" Style="{StaticResource SidebarButton}" Command="{Binding NavigateToJournalCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconLucide Kind="NotebookPen" Width="16" Height="16" VerticalAlignment="Center" Margin="2,0"/>
+                                    <TextBlock Text="Journal" Margin="10,0,0,0" Visibility="{Binding IsSidebarCollapsed, Converter={StaticResource InverseToVisibilityConverter}}"/>
+                                </StackPanel>
+                            </Button>
 
                             <TextBlock Text="PLANNING" Style="{StaticResource SecondaryText}" FontSize="10"
-                                       Margin="16,12,16,4" FontWeight="Bold" Opacity="0.5"/>
-                            <Button Tag="Pillars"      Content="◫  Pillars"      Style="{StaticResource SidebarButton}" Command="{Binding NavigateToPillarsCommand}"/>
-                            <Button Tag="Goals"        Content="◈  Goals"        Style="{StaticResource SidebarButton}" Command="{Binding NavigateToGoalsCommand}"/>
-                            <Button Tag="Tasks"        Content="▷  Tasks"        Style="{StaticResource SidebarButton}" Command="{Binding NavigateToTasksCommand}"/>
-                            <Button Tag="Cycle Focus"  Content="◑  Cycle Focus"  Style="{StaticResource SidebarButton}" Command="{Binding NavigateToCycleFocusCommand}"/>
+                                       Margin="16,12,16,4" FontWeight="Bold" Opacity="0.5"
+                                       Visibility="{Binding IsSidebarCollapsed, Converter={StaticResource InverseToVisibilityConverter}}"/>
+                            <Button Tag="Pillars" Style="{StaticResource SidebarButton}" Command="{Binding NavigateToPillarsCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconLucide Kind="Columns4" Width="16" Height="16" VerticalAlignment="Center" Margin="2,0"/>
+                                    <TextBlock Text="Pillars" Margin="10,0,0,0" Visibility="{Binding IsSidebarCollapsed, Converter={StaticResource InverseToVisibilityConverter}}"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Tag="Goals" Style="{StaticResource SidebarButton}" Command="{Binding NavigateToGoalsCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconLucide Kind="Target" Width="16" Height="16" VerticalAlignment="Center" Margin="2,0"/>
+                                    <TextBlock Text="Goals" Margin="10,0,0,0" Visibility="{Binding IsSidebarCollapsed, Converter={StaticResource InverseToVisibilityConverter}}"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Tag="Tasks" Style="{StaticResource SidebarButton}" Command="{Binding NavigateToTasksCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconLucide Kind="ListChecks" Width="16" Height="16" VerticalAlignment="Center" Margin="2,0"/>
+                                    <TextBlock Text="Tasks" Margin="10,0,0,0" Visibility="{Binding IsSidebarCollapsed, Converter={StaticResource InverseToVisibilityConverter}}"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Tag="Calendar" Style="{StaticResource SidebarButton}" Command="{Binding NavigateToCalendarCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconLucide Kind="Calendar" Width="16" Height="16" VerticalAlignment="Center" Margin="2,0"/>
+                                    <TextBlock Text="Calendar" Margin="10,0,0,0" Visibility="{Binding IsSidebarCollapsed, Converter={StaticResource InverseToVisibilityConverter}}"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Tag="Cycle Focus" Style="{StaticResource SidebarButton}" Command="{Binding NavigateToCycleFocusCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconLucide Kind="RefreshCw" Width="16" Height="16" VerticalAlignment="Center" Margin="2,0"/>
+                                    <TextBlock Text="Cycle Focus" Margin="10,0,0,0" Visibility="{Binding IsSidebarCollapsed, Converter={StaticResource InverseToVisibilityConverter}}"/>
+                                </StackPanel>
+                            </Button>
 
                             <TextBlock Text="REFLECTION" Style="{StaticResource SecondaryText}" FontSize="10"
-                                       Margin="16,12,16,4" FontWeight="Bold" Opacity="0.5"/>
-                            <Button Tag="Weekly Review"  Content="◐  Weekly Review"  Style="{StaticResource SidebarButton}" Command="{Binding NavigateToWeeklyReviewCommand}"/>
-                            <Button Tag="Monthly Review" Content="◌  Monthly Review" Style="{StaticResource SidebarButton}" Command="{Binding NavigateToMonthlyReviewCommand}"/>
-                            <Button Tag="Decisions"      Content="△  Decisions"      Style="{StaticResource SidebarButton}" Command="{Binding NavigateToDecisionsCommand}"/>
-                            <Button Tag="Patterns"       Content="⟳  Patterns"       Style="{StaticResource SidebarButton}" Command="{Binding NavigateToPatternsCommand}"/>
+                                       Margin="16,12,16,4" FontWeight="Bold" Opacity="0.5"
+                                       Visibility="{Binding IsSidebarCollapsed, Converter={StaticResource InverseToVisibilityConverter}}"/>
+                            <Button Tag="Weekly Review" Style="{StaticResource SidebarButton}" Command="{Binding NavigateToWeeklyReviewCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconLucide Kind="CalendarDays" Width="16" Height="16" VerticalAlignment="Center" Margin="2,0"/>
+                                    <TextBlock Text="Weekly Review" Margin="10,0,0,0" Visibility="{Binding IsSidebarCollapsed, Converter={StaticResource InverseToVisibilityConverter}}"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Tag="Monthly Review" Style="{StaticResource SidebarButton}" Command="{Binding NavigateToMonthlyReviewCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconLucide Kind="CalendarRange" Width="16" Height="16" VerticalAlignment="Center" Margin="2,0"/>
+                                    <TextBlock Text="Monthly Review" Margin="10,0,0,0" Visibility="{Binding IsSidebarCollapsed, Converter={StaticResource InverseToVisibilityConverter}}"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Tag="Decisions" Style="{StaticResource SidebarButton}" Command="{Binding NavigateToDecisionsCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconLucide Kind="Scale" Width="16" Height="16" VerticalAlignment="Center" Margin="2,0"/>
+                                    <TextBlock Text="Decisions" Margin="10,0,0,0" Visibility="{Binding IsSidebarCollapsed, Converter={StaticResource InverseToVisibilityConverter}}"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Tag="Patterns" Style="{StaticResource SidebarButton}" Command="{Binding NavigateToPatternsCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconLucide Kind="BrainCircuit" Width="16" Height="16" VerticalAlignment="Center" Margin="2,0"/>
+                                    <TextBlock Text="Patterns" Margin="10,0,0,0" Visibility="{Binding IsSidebarCollapsed, Converter={StaticResource InverseToVisibilityConverter}}"/>
+                                </StackPanel>
+                            </Button>
 
                             <TextBlock Text="ANALYTICS" Style="{StaticResource SecondaryText}" FontSize="10"
-                                       Margin="16,12,16,4" FontWeight="Bold" Opacity="0.5"/>
-                            <Button Tag="Metrics"       Content="∿  Metrics"       Style="{StaticResource SidebarButton}" Command="{Binding NavigateToMetricsCommand}"/>
-                            <Button Tag="Pillar Trends" Content="📈  Pillar Trends" Style="{StaticResource SidebarButton}" Command="{Binding NavigateToPillarTrendsCommand}"/>
+                                       Margin="16,12,16,4" FontWeight="Bold" Opacity="0.5"
+                                       Visibility="{Binding IsSidebarCollapsed, Converter={StaticResource InverseToVisibilityConverter}}"/>
+                            <Button Tag="Metrics" Style="{StaticResource SidebarButton}" Command="{Binding NavigateToMetricsCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconLucide Kind="ChartBar" Width="16" Height="16" VerticalAlignment="Center" Margin="2,0"/>
+                                    <TextBlock Text="Metrics" Margin="10,0,0,0" Visibility="{Binding IsSidebarCollapsed, Converter={StaticResource InverseToVisibilityConverter}}"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Tag="Pillar Trends" Style="{StaticResource SidebarButton}" Command="{Binding NavigateToPillarTrendsCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconLucide Kind="TrendingUp" Width="16" Height="16" VerticalAlignment="Center" Margin="2,0"/>
+                                    <TextBlock Text="Pillar Trends" Margin="10,0,0,0" Visibility="{Binding IsSidebarCollapsed, Converter={StaticResource InverseToVisibilityConverter}}"/>
+                                </StackPanel>
+                            </Button>
 
                             <TextBlock Text="SYSTEM" Style="{StaticResource SecondaryText}" FontSize="10"
-                                       Margin="16,12,16,4" FontWeight="Bold" Opacity="0.5"/>
-                            <Button Tag="Export"   Content="↓  Export"   Style="{StaticResource SidebarButton}" Command="{Binding NavigateToExportCommand}"/>
-                            <Button Tag="Settings" Content="⚙  Settings" Style="{StaticResource SidebarButton}" Command="{Binding NavigateToSettingsCommand}"/>
+                                       Margin="16,12,16,4" FontWeight="Bold" Opacity="0.5"
+                                       Visibility="{Binding IsSidebarCollapsed, Converter={StaticResource InverseToVisibilityConverter}}"/>
+                            <Button Tag="Export" Style="{StaticResource SidebarButton}" Command="{Binding NavigateToExportCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconLucide Kind="Download" Width="16" Height="16" VerticalAlignment="Center" Margin="2,0"/>
+                                    <TextBlock Text="Export" Margin="10,0,0,0" Visibility="{Binding IsSidebarCollapsed, Converter={StaticResource InverseToVisibilityConverter}}"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Tag="Settings" Style="{StaticResource SidebarButton}" Command="{Binding NavigateToSettingsCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconLucide Kind="Settings" Width="16" Height="16" VerticalAlignment="Center" Margin="2,0"/>
+                                    <TextBlock Text="Settings" Margin="10,0,0,0" Visibility="{Binding IsSidebarCollapsed, Converter={StaticResource InverseToVisibilityConverter}}"/>
+                                </StackPanel>
+                            </Button>
                         </StackPanel>
                     </ScrollViewer>
                 </DockPanel>
             </Border>
 
-            <!-- Content -->
-            <ContentControl Grid.Column="1" Content="{Binding CurrentViewModel}" Margin="24,20,24,20"/>
+            <!-- Content (animated page transitions) -->
+            <controls:NavigationContentControl Grid.Column="1" Content="{Binding CurrentViewModel}" Margin="24,20,24,20"/>
         </Grid>
     </Grid>
 </Window>
